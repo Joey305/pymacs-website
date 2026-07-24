@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Glossary | PyMACS{% endblock %}
+{% block content %}
+<section class="page-hero narrow">
+  <p class="eyebrow">Glossary</p>
+  <h1>The vocabulary that makes MD less mysterious.</h1>
+  <p>Short definitions for the terms users meet while reading the PyMACS workflow and interpreting outputs.</p>
+</section>
+
+<section class="content-grid">
+  <div class="glossary-grid">
+    {% for term, definition in glossary %}
+      <article>
+        <h2>{{ term }}</h2>
+        <p>{{ definition }}</p>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}{{ step.title }} | PyMACS{% endblock %}
+{% block content %}
+<section class="page-hero narrow">
+  <p class="eyebrow">{{ step.kicker }} / {{ step.script }}</p>
+  <h1>{{ step.title }}</h1>
+  <p>{{ step.summary }}</p>
+</section>
+
+<section class="lesson-layout">
+  <aside class="lesson-sidebar">
+    <a href="/workflow.html">All workflow steps</a>
+    {% for item in script_steps %}
+      <a class="{{ 'active' if item.slug == step.slug else '' }}" href="/workflow/{{ item.slug }}.html">{{ item.kicker }}</a>
+    {% endfor %}
+  </aside>
+  <div class="lesson-body">
+    <section class="lesson-section">
+      <h2>Why this step matters</h2>
+      <p>{{ step.why }}</p>
+    </section>
+    <section class="lesson-section">
+      <h2>Concepts to understand</h2>
+      <div class="pill-grid">
+        {% for concept in step.concepts %}
+          <span>{{ concept }}</span>
+        {% endfor %}
+      </div>
+    </section>
+    {% if step.stage_links %}
+      <section class="lesson-section">
+        <h2>Before production MD</h2>
+        <p>Step 2 runs three stabilization stages before production trajectory collection. Open each page to learn what it does, what files it reads and writes, and what to check before moving forward.</p>
+        <div class="stage-link-grid">
+          {% for slug in step.stage_links %}
+            {% for stage in equilibration_stages if stage.slug == slug %}
+              <a href="/workflow/equilibration/{{ stage.slug }}.html">
+                <span>{{ stage.short }}</span>
+                <strong>{{ stage.title }}</strong>
+                <small>{{ stage.summary }}</small>
+              </a>
+            {% endfor %}
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+    <section class="lesson-section">
+      <h2>Common outputs</h2>
+      <div class="output-list">
+        {% for output in step.outputs %}
+          <code>{{ output }}</code>
+        {% endfor %}
+      </div>
+    </section>
+    <section class="lesson-section">
+      <h2>Typical commands</h2>
+      {% for command in step.commands %}
+        <pre><code>{{ command }}</code></pre>
+      {% endfor %}
+    </section>
+  </div>
+</section>
+{% endblock %}

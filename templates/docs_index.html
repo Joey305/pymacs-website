@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Documentation | PyMACS{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <p class="eyebrow">PyMACS documentation</p>
+  <h1>The README, rebuilt as clickable website pages.</h1>
+  <p>These pages follow the detailed PyMACS README but organize it for pymacs.com. Use the docs when you need installation, environments, force fields, CGenFF, run templates, flags, analysis outputs, restarts, examples, or troubleshooting.</p>
+</section>
+
+<section class="content-grid">
+  <div class="docs-grid">
+    {% for page in docs_pages %}
+      <a class="docs-card" href="/docs/{{ page.slug }}.html">
+        <span>{{ page.kicker }}</span>
+        <h2>{{ page.title }}</h2>
+        <p>{{ page.summary }}</p>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

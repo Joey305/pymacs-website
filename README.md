@@ -16,8 +16,11 @@ The site is designed for users who are new to molecular dynamics. A visitor shou
 
 ```text
 website/
+├── .python-version
+├── Procfile
 ├── app.py
 ├── content.py
+├── docs_content.py
 ├── requirements.txt
 ├── static/
 │   ├── css/styles.css
@@ -33,6 +36,8 @@ website/
     ├── workflow_detail.html
     ├── equilibration_detail.html
     ├── engine.html
+    ├── docs_index.html
+    ├── docs_detail.html
     ├── analysis.html
     ├── examples.html
     ├── glossary.html
@@ -67,27 +72,29 @@ http://127.0.0.1:5000
 | Route | Purpose |
 | --- | --- |
 | `/` | Home page, quick facts, learning path, workflow preview, and output gallery |
-| `/basics` | Beginner introduction to molecular dynamics |
-| `/force-fields` | Force field comparison and CHARMM/CGenFF explanation |
-| `/getting-started` | First-run PyMACS guide |
-| `/engine` | Command-level explanation of what PyMACS automates |
-| `/workflow` | Script-by-script workflow overview |
-| `/workflow/<slug>` | Detail page for each workflow stage |
-| `/workflow/equilibration/energy-minimization` | EM teaching page |
-| `/workflow/equilibration/nvt-equilibration` | NVT teaching page |
-| `/workflow/equilibration/npt-equilibration` | NPT teaching page |
-| `/analysis` | Analysis outputs and interpretation guide |
-| `/examples` | Copyable example workflows |
-| `/glossary` | Beginner-friendly MD vocabulary |
-| `/resources` | GitHub, paper, and supporting resources |
+| `/basics.html` | Beginner introduction to molecular dynamics |
+| `/force-fields.html` | Force field comparison and CHARMM/CGenFF explanation |
+| `/getting-started.html` | First-run PyMACS guide |
+| `/engine.html` | Command-level explanation of what PyMACS automates |
+| `/docs.html` | Documentation hub rebuilt from the detailed PyMACS README |
+| `/docs/<slug>.html` | Detailed documentation pages for install, environments, flags, examples, troubleshooting, and more |
+| `/workflow.html` | Script-by-script workflow overview |
+| `/workflow/<slug>.html` | Detail page for each workflow stage |
+| `/workflow/equilibration/energy-minimization.html` | EM teaching page |
+| `/workflow/equilibration/nvt-equilibration.html` | NVT teaching page |
+| `/workflow/equilibration/npt-equilibration.html` | NPT teaching page |
+| `/analysis.html` | Analysis outputs and interpretation guide |
+| `/examples.html` | Copyable example workflows |
+| `/glossary.html` | Beginner-friendly MD vocabulary |
+| `/resources.html` | Paper, GitHub, and supporting resources |
 
 ## Editing Content
 
-Most educational copy lives in `content.py`. The templates render that structured content into pages.
+Most educational copy lives in `content.py` and `docs_content.py`. The templates render that structured content into pages.
 
 Use this pattern for updates:
 
-1. Add or revise content in `content.py`.
+1. Add or revise content in `content.py` or `docs_content.py`.
 2. Update the matching template only when the page structure needs to change.
 3. Add CSS in `static/css/styles.css` only for reusable layout or component styles.
 4. Run the validation checks below before pushing.
@@ -97,7 +104,7 @@ Use this pattern for updates:
 Run a syntax check:
 
 ```bash
-python -m py_compile app.py content.py
+python -m py_compile app.py content.py docs_content.py
 ```
 
 Render every public route with Flask's test client:
@@ -109,18 +116,33 @@ from app import app
 client = app.test_client()
 routes = [
     "/",
-    "/basics",
-    "/force-fields",
-    "/getting-started",
-    "/engine",
-    "/workflow",
-    "/analysis",
-    "/examples",
-    "/glossary",
-    "/resources",
-    "/workflow/equilibration/energy-minimization",
-    "/workflow/equilibration/nvt-equilibration",
-    "/workflow/equilibration/npt-equilibration",
+    "/basics.html",
+    "/force-fields.html",
+    "/getting-started.html",
+    "/engine.html",
+    "/docs.html",
+    "/docs/install.html",
+    "/docs/repository-map.html",
+    "/docs/requirements-environments.html",
+    "/docs/inputs-structures.html",
+    "/docs/force-fields.html",
+    "/docs/ligands-cgenff.html",
+    "/docs/run-templates.html",
+    "/docs/pipeline-scripts.html",
+    "/docs/cli-flags.html",
+    "/docs/restarts.html",
+    "/docs/analysis-outputs.html",
+    "/docs/examples-lfs.html",
+    "/docs/troubleshooting.html",
+    "/docs/best-practices.html",
+    "/workflow.html",
+    "/analysis.html",
+    "/examples.html",
+    "/glossary.html",
+    "/resources.html",
+    "/workflow/equilibration/energy-minimization.html",
+    "/workflow/equilibration/nvt-equilibration.html",
+    "/workflow/equilibration/npt-equilibration.html",
 ]
 
 for route in routes:
@@ -133,7 +155,7 @@ with app.app_context():
     from content import SCRIPT_STEPS
 
 for step in SCRIPT_STEPS:
-    route = f"/workflow/{step['slug']}"
+    route = f"/workflow/{step['slug']}.html"
     response = client.get(route)
     print(f"{route}: {response.status_code}")
     if response.status_code != 200:
@@ -167,14 +189,41 @@ If a template references a new image, put that image in `static/img/` and verify
 
 This repository is a Flask application. It is not a static-only site unless you add a static export workflow later.
 
-For production, run the app behind a WSGI server such as Gunicorn:
+## Heroku Deployment
 
-```bash
-python -m pip install gunicorn
-gunicorn "app:app"
+The app includes the files Heroku needs in the website repo root:
+
+```text
+Procfile
+.python-version
+requirements.txt
 ```
 
-Hosting options that can run Flask include Render, Fly.io, Railway, PythonAnywhere, a VM, or any server that supports WSGI Python apps.
+The `Procfile` starts the Flask app with Gunicorn:
+
+```text
+web: gunicorn app:app --bind 0.0.0.0:$PORT
+```
+
+Deploy from this directory:
+
+```bash
+heroku login
+heroku create pymacs
+git push heroku main
+heroku open
+```
+
+If the Heroku app already exists:
+
+```bash
+heroku git:remote -a <your-heroku-app-name>
+git push heroku main
+```
+
+Heroku detects this as a Python app from `requirements.txt`, uses `.python-version` for the Python major version, installs Flask and Gunicorn, and starts the `web` process from `Procfile`.
+
+Other hosting options that can run Flask include Render, Fly.io, Railway, PythonAnywhere, a VM, or any server that supports WSGI Python apps.
 
 ## Do Not Commit
 

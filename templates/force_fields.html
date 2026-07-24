@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Force Fields | PyMACS{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <p class="eyebrow">Force fields</p>
+  <h1>The force field is the physics contract.</h1>
+  <p>It defines how atoms are typed, how bonds and angles resist deformation, how charges interact, and how nonbonded atoms attract or repel each other. PyMACS highlights the CHARMM family, especially CHARMM36 and CHARMM36/LJ-PME, with CGenFF for small molecules.</p>
+</section>
+
+<section class="content-grid">
+  <div class="forcefield-grid">
+    {% for ff in force_fields %}
+      <article class="force-card {{ 'featured' if 'PyMACS' in ff.position else '' }}">
+        <p>{{ ff.position }}</p>
+        <h2>{{ ff.name }}</h2>
+        <span>{{ ff.description }}</span>
+        <h3>Strengths</h3>
+        <ul>
+          {% for strength in ff.strengths %}
+            <li>{{ strength }}</li>
+          {% endfor %}
+        </ul>
+        <h3>Watch for</h3>
+        <small>{{ ff.watch }}</small>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="band split">
+  <div>
+    <p class="eyebrow">Why PyMACS uses CHARMM</p>
+    <h2>Consistency from protein to ligand.</h2>
+    <p>The PyMACS workflow is built around CHARMM36-family biomolecular topology generation and CGenFF-compatible ligand parameterization. That keeps protein, nucleic-acid, cofactor, and drug-like molecule handling inside one conceptual family.</p>
+  </div>
+  <div class="callout tall">
+    <strong>Beginner rule:</strong> choose one force-field family for the whole system and keep every topology, ligand parameter, water model, ion model, and MDP assumption compatible with that choice.
+  </div>
+</section>
+{% endblock %}

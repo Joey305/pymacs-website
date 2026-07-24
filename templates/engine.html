@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Examine the Engine | PyMACS{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <p class="eyebrow">Examine the engine</p>
+  <h1>The bash workflow PyMACS expedites.</h1>
+  <p>PyMACS wraps the command-line and analysis work that used to happen by hand: structure cleanup, topology generation, ligand conversion, box building, solvation, ionization, minimization, equilibration, production MD, trajectory processing, contact analysis, interaction networks, and report generation. The commands below use generic names so a beginner can understand the pattern without copying a system-specific run blindly.</p>
+</section>
+
+<section class="band split">
+  <div>
+    <p class="eyebrow">What this page shows</p>
+    <h2>Manual intent, automated safely.</h2>
+    <p>Each card maps a manual shell habit to the PyMACS script stage that handles it. The exact command may change by system, force field, ligand, hardware, or restart state, but the scientific job is the same.</p>
+  </div>
+  <div class="engine-summary">
+    <article>
+      <span>Step 1</span>
+      <strong>Build the system</strong>
+      <small>Prepare coordinates, topologies, solvent, ions, and `em.tpr`.</small>
+    </article>
+    <article>
+      <span>Step 2</span>
+      <strong>Run the simulation</strong>
+      <small>Minimize, equilibrate, run production, and handle compute resources.</small>
+    </article>
+    <article>
+      <span>Step 3</span>
+      <strong>Analyze the trajectory</strong>
+      <small>Recenter, measure stability, scan contacts, and classify interactions.</small>
+    </article>
+    <article>
+      <span>Step 4</span>
+      <strong>Package the evidence</strong>
+      <small>Render networks, assemble figurebooks, and compare runs when needed.</small>
+    </article>
+  </div>
+</section>
+
+<section class="content-grid">
+  <div class="section-heading">
+    <p class="eyebrow">Script-by-script command map</p>
+    <h2>Thirty-five jobs PyMACS handles for you.</h2>
+  </div>
+  <div class="engine-flow">
+    {% for item in engine_steps %}
+      <article class="engine-card">
+        <div class="engine-card-head">
+          <span>{{ "%02d"|format(item.number) }}</span>
+          <div>
+            <p>{{ item.phase }}</p>
+            <h2>{{ item.title }}</h2>
+            <code>{{ item.script }}</code>
+          </div>
+        </div>
+        <div class="engine-card-body">
+          <section>
+            <h3>Manual idea</h3>
+            <pre><code>{{ item.manual }}</code></pre>
+          </section>
+          <section>
+            <h3>Command pattern</h3>
+            <pre><code>{{ item.command }}</code></pre>
+          </section>
+          <section>
+            <h3>What PyMACS is doing</h3>
+            <p>{{ item.does }}</p>
+          </section>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="band">
+  <div class="section-heading">
+    <p class="eyebrow">Why this matters</p>
+    <h2>The tool is not hiding science. It is standardizing it.</h2>
+  </div>
+  <div class="check-grid">
+    <article>Commands are logged so users can audit what happened.</article>
+    <article>System-specific choices are exposed through arguments and MDP files.</article>
+    <article>Fragile manual edits become repeatable script behavior.</article>
+    <article>Beginners can learn the workflow before customizing it.</article>
+    <article>Advanced users can still control hardware, indexes, cutoffs, and restart behavior.</article>
+  </div>
+</section>
+{% endblock %}

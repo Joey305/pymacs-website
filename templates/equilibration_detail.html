@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}{{ stage.short }} | PyMACS{% endblock %}
+{% block content %}
+<section class="page-hero narrow">
+  <p class="eyebrow">{{ stage.stage }} / {{ stage.short }}</p>
+  <h1>{{ stage.title }}</h1>
+  <p>{{ stage.summary }}</p>
+</section>
+
+<section class="lesson-layout">
+  <aside class="lesson-sidebar">
+    <a href="/workflow/simulation.html">Back to Step 2</a>
+    {% for item in stages %}
+      <a class="{{ 'active' if item.slug == stage.slug else '' }}" href="/workflow/equilibration/{{ item.slug }}.html">{{ item.short }}</a>
+    {% endfor %}
+  </aside>
+  <div class="lesson-body">
+    <section class="lesson-section">
+      <h2>Plain-language picture</h2>
+      <p>{{ stage.plain }}</p>
+      <div class="callout">
+        <strong>Analogy:</strong> {{ stage.analogy }}
+      </div>
+    </section>
+
+    <section class="stage-specs">
+      <article>
+        <span>Input</span>
+        <strong>{{ stage.input }}</strong>
+      </article>
+      <article>
+        <span>MDP template</span>
+        <strong>{{ stage.mdp }}</strong>
+      </article>
+      <article>
+        <span>Output</span>
+        <strong>{{ stage.output }}</strong>
+      </article>
+    </section>
+
+    <section class="lesson-section">
+      <h2>What happens computationally</h2>
+      <ol class="teaching-list">
+        {% for item in stage.what_happens %}
+          <li>{{ item }}</li>
+        {% endfor %}
+      </ol>
+    </section>
+
+    <section class="lesson-section">
+      <h2>Role in the PyMACS pipeline</h2>
+      <div class="check-list">
+        {% for item in stage.pipeline_role %}
+          <span>{{ item }}</span>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="lesson-section">
+      <h2>What to watch for</h2>
+      <div class="warning-grid">
+        {% for item in stage.watch %}
+          <article>{{ item }}</article>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="lesson-section">
+      <h2>Beginner checks before continuing</h2>
+      <ul class="check-bullets">
+        {% for item in stage.beginner_checks %}
+          <li>{{ item }}</li>
+        {% endfor %}
+      </ul>
+    </section>
+  </div>
+</section>
+{% endblock %}

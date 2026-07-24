@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% block title %}Examples | PyMACS{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <p class="eyebrow">Curated examples</p>
+  <h1>Copy the commands, run the example, compare the outputs.</h1>
+  <p>Each walkthrough starts from the PyMACS repository root and keeps the packaged example folders untouched. Start with Example 1 unless another system matches your science better.</p>
+</section>
+
+<section class="content-grid examples-guide">
+  <div class="example-start">
+    <div>
+      <p class="eyebrow">Before any example</p>
+      <h2>Open a terminal in the PyMACS folder.</h2>
+      <p>All commands below assume your first prompt is already inside the repository root, the folder that contains <code>1_AutomateGromacs.py</code>, <code>2_AutomateGromacs.py</code>, and <code>Example_Choices/</code>.</p>
+    </div>
+    <div class="command-card">
+      <div class="command-head">
+        <span>Sanity check</span>
+        <button type="button" data-copy-command>Copy</button>
+      </div>
+      <pre><code>pwd
+ls 1_AutomateGromacs.py 2_AutomateGromacs.py 3A_AutomateGromacs.py Example_Choices</code></pre>
+    </div>
+  </div>
+
+  <div class="quick-install-panel" id="quick-start-install">
+    <div class="quick-install-copy">
+      <p class="eyebrow">Need PyMACS first?</p>
+      <h2>{{ quick_install.title }}</h2>
+      <p>{{ quick_install.summary }}</p>
+      <p>{{ quick_install.plain }}</p>
+      <div class="install-guards" aria-label="Installer safety checks">
+        {% for guard in quick_install.guards %}
+          <span>{{ guard }}</span>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="command-card command-card-large">
+      <div class="command-head">
+        <span>One-command installer</span>
+        <button type="button" data-copy-command>Copy install command</button>
+      </div>
+      <pre><code>{{ quick_install.command }}</code></pre>
+    </div>
+  </div>
+
+  <nav class="example-jump" aria-label="Example shortcuts">
+    {% for example in examples %}
+      <a href="#{{ example.slug }}">
+        <span>{{ example.name }}</span>
+        <strong>{{ example.type }}</strong>
+        <small>{{ example.system }}</small>
+      </a>
+    {% endfor %}
+  </nav>
+
+  {% for example in examples %}
+    <article class="example-walkthrough" id="{{ example.slug }}">
+      <header class="example-walkthrough-head">
+        <div>
+          <p class="eyebrow">{{ example.difficulty }}</p>
+          <h2>{{ example.name }}: {{ example.type }}</h2>
+          <p>{{ example.lesson }}</p>
+        </div>
+        <aside>
+          <strong>{{ example.system }}</strong>
+          <span>{{ example.time }}</span>
+        </aside>
+      </header>
+
+      <div class="example-brief">
+        <section>
+          <h3>Best for</h3>
+          <p>{{ example.best_for }}</p>
+        </section>
+        <section>
+          <h3>Files this example uses</h3>
+          <div class="file-list">
+            {% for path, meaning in example.included %}
+              <div>
+                <code>{{ path }}</code>
+                <span>{{ meaning }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        </section>
+      </div>
+
+      <div class="example-steps">
+        {% for step in example.steps %}
+          <section class="example-step">
+            <div class="step-marker">{{ loop.index }}</div>
+            <div class="step-body">
+              <h3>{{ step.title }}</h3>
+              <p>{{ step.body }}</p>
+              <div class="command-card">
+                <div class="command-head">
+                  <span>Terminal commands</span>
+                  <button type="button" data-copy-command>Copy</button>
+                </div>
+                <pre><code>{{ step.command }}</code></pre>
+              </div>
+              <div class="expected-output">
+                <strong>Expected:</strong>
+                <span>{{ step.expect }}</span>
+              </div>
+            </div>
+          </section>
+        {% endfor %}
+      </div>
+
+      <section class="beginner-checks">
+        <h3>Beginner guardrails</h3>
+        <ul>
+          {% for check in example.checks %}
+            <li>{{ check }}</li>
+          {% endfor %}
+        </ul>
+      </section>
+    </article>
+  {% endfor %}
+
+  <section class="troubleshooting-panel">
+    <div>
+      <p class="eyebrow">If something breaks</p>
+      <h2>Most failures are folder, environment, or filename problems.</h2>
+      <p>Before debugging the science, confirm the simple pieces: you are in the run folder, Conda is active, GROMACS is visible, and the copied files have the expected names.</p>
+    </div>
+    <div class="trouble-grid">
+      <article>
+        <h3>Wrong folder</h3>
+        <pre><code>pwd
+ls</code></pre>
+        <p>You should be inside a folder under <code>RUNS/</code> before running Scripts 1-4.</p>
+      </article>
+      <article>
+        <h3>Missing GROMACS</h3>
+        <pre><code>gmx --version</code></pre>
+        <p>If this fails, activate the environment or module that provides GROMACS before continuing.</p>
+      </article>
+      <article>
+        <h3>Missing outputs</h3>
+        <pre><code>find . -maxdepth 2 -type f | sort | head -80</code></pre>
+        <p>Use this to see what the scripts actually wrote before assuming a later step failed.</p>
+      </article>
+    </div>
+  </section>
+</section>
+
+<script>
+  document.querySelectorAll("[data-copy-command]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const card = button.closest(".command-card");
+      const code = card ? card.querySelector("code") : null;
+      if (!code) return;
+      await navigator.clipboard.writeText(code.innerText);
+      const original = button.textContent;
+      button.textContent = "Copied";
+      window.setTimeout(() => {
+        button.textContent = original;
+      }, 1200);
+    });
+  });
+</script>
+{% endblock %}

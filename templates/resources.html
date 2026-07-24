@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Resources | PyMACS{% endblock %}
+{% block content %}
+<section class="page-hero narrow">
+  <p class="eyebrow">Project resources</p>
+  <h1>Paper, code, documentation, and references.</h1>
+  <p>These links connect the learning site to the open-source project and the manuscript record.</p>
+</section>
+
+<section class="content-grid">
+  <div class="resource-list">
+    {% for resource in resources %}
+      <a class="resource-card" href="{{ resource.href }}">
+        <div>
+          <h2>{{ resource.title }}</h2>
+          <p>{{ resource.body }}</p>
+        </div>
+        <span>Open</span>
+      </a>
+    {% endfor %}
+  </div>
+  <div class="citation-box">
+    <h2>Suggested PyMACS citation details</h2>
+    <p>Joseph M. Schulz, Robert C. Reynolds, Stephan C. Schurer. PyMACS: A python-based automation suite for GROMACS molecular dynamics setup, simulation, and analysis. European Journal of Medicinal Chemistry, Volume 316, Article 119038. DOI: 10.1016/j.ejmech.2026.119038.</p>
+  </div>
+</section>
+{% endblock %}

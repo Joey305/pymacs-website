@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}MD Basics | PyMACS{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <p class="eyebrow">Molecular dynamics 101</p>
+  <h1>MD is a movie of molecular motion, built from physics.</h1>
+  <p>A protein-ligand structure is a starting pose. Molecular dynamics asks how that pose behaves when atoms are allowed to move under a force field, temperature, pressure, water, ions, and time.</p>
+</section>
+
+<section class="lesson-layout">
+  <aside class="lesson-sidebar">
+    <a href="#idea">Core idea</a>
+    <a href="#workflow">Standard workflow</a>
+    <a href="#judgment">Scientific judgment</a>
+    <a href="#questions">Questions MD answers</a>
+  </aside>
+  <div class="lesson-body">
+    <section id="idea" class="lesson-section">
+      <h2>The core idea</h2>
+      <p>Molecular dynamics treats atoms as particles. A force field estimates the energy of the system, the MD engine converts those energies into forces, and the simulation integrates motion in tiny time steps.</p>
+      <div class="callout">
+        <strong>Mental model:</strong> docking gives you a pose; MD asks whether that pose can remain physically plausible while the environment pushes back.
+      </div>
+    </section>
+    <section id="workflow" class="lesson-section">
+      <h2>The standard MD workflow</h2>
+      <div class="concept-strip">
+        <span>Prepare</span>
+        <span>Parameterize</span>
+        <span>Minimize</span>
+        <span>Equilibrate</span>
+        <span>Produce</span>
+        <span>Analyze</span>
+      </div>
+      <p>Preparation fixes structural problems and builds topology. Minimization relaxes bad contacts. NVT equilibration stabilizes temperature. NPT equilibration stabilizes pressure and density. Production MD generates the trajectory used for scientific interpretation.</p>
+    </section>
+    <section id="judgment" class="lesson-section">
+      <h2>Where scientific judgment enters</h2>
+      <p>Automation helps, but MD still depends on meaningful choices: protonation state, retained cofactors, ligand parameters, force-field family, box size, salt concentration, simulation length, equilibration protocol, and analysis cutoffs.</p>
+      <p>PyMACS exposes these choices with defaults for beginners and command-line controls for experienced users.</p>
+    </section>
+    <section id="questions" class="lesson-section">
+      <h2>Questions MD can help answer</h2>
+      <div class="two-column">
+        <article>
+          <h3>Structure</h3>
+          <p>Does the protein remain stable? Does the complex compact or expand? Do helices, sheets, or loops change?</p>
+        </article>
+        <article>
+          <h3>Binding</h3>
+          <p>Does the ligand stay in the pocket? Which residues contact it repeatedly? Which contacts are transient?</p>
+        </article>
+        <article>
+          <h3>Mechanism</h3>
+          <p>Do interactions cluster around a known motif? Does a cofactor or partner chain reshape the interface?</p>
+        </article>
+        <article>
+          <h3>Comparison</h3>
+          <p>Do two ligands, mutations, species, or apo/holo states produce different stability or contact patterns?</p>
+        </article>
+      </div>
+    </section>
+  </div>
+</section>
+{% endblock %}

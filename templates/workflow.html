@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Workflow | PyMACS{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <p class="eyebrow">PyMACS workflow</p>
+  <h1>Each script answers a different scientific need.</h1>
+  <p>The numbered scripts are organized around the normal MD workflow: prepare a chemically valid system, simulate it, analyze the trajectory, visualize interactions, and assemble a report.</p>
+</section>
+
+<section class="content-grid">
+  <div class="workflow-list">
+    {% for step in script_steps %}
+      <article class="workflow-card">
+        <div>
+          <p>{{ step.kicker }}</p>
+          <h2>{{ step.title }}</h2>
+          <code>{{ step.script }}</code>
+        </div>
+        <p>{{ step.summary }}</p>
+        <a class="text-link" href="/workflow/{{ step.slug }}.html">Open step</a>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

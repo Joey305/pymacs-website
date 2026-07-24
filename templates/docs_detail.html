@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}{{ page.title }} | PyMACS Docs{% endblock %}
+{% block content %}
+<section class="page-hero narrow">
+  <p class="eyebrow">{{ page.kicker }}</p>
+  <h1>{{ page.title }}</h1>
+  <p>{{ page.summary }}</p>
+</section>
+
+<section class="lesson-layout docs-layout">
+  <aside class="lesson-sidebar">
+    <a href="/docs.html">All docs</a>
+    {% for item in docs_pages %}
+      <a class="{{ 'active' if item.slug == page.slug else '' }}" href="/docs/{{ item.slug }}.html">{{ item.kicker }}</a>
+    {% endfor %}
+  </aside>
+
+  <div class="lesson-body">
+    {% for section in page.sections %}
+      <article class="lesson-section docs-section">
+        <h2>{{ section.heading }}</h2>
+        {% if section.body %}
+          <p>{{ section.body }}</p>
+        {% endif %}
+
+        {% if section.bullets %}
+          <ul class="teaching-list">
+            {% for bullet in section.bullets %}
+              <li>{{ bullet }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+
+        {% if section.table %}
+          <div class="docs-table-wrap">
+            <table class="docs-table">
+              {% for row in section.table %}
+                {% if loop.first %}
+                  <thead>
+                    <tr>
+                      {% for cell in row %}
+                        <th>{{ cell }}</th>
+                      {% endfor %}
+                    </tr>
+                  </thead>
+                  <tbody>
+                {% else %}
+                    <tr>
+                      {% for cell in row %}
+                        <td>{{ cell }}</td>
+                      {% endfor %}
+                    </tr>
+                {% endif %}
+              {% endfor %}
+              {% if section.table|length > 1 %}
+                  </tbody>
+              {% endif %}
+            </table>
+          </div>
+        {% endif %}
+
+        {% if section.code %}
+          <div class="command-card">
+            <div class="command-head">
+              <span>Copy command</span>
+              <button type="button" data-copy-command>Copy</button>
+            </div>
+            <pre><code>{{ section.code }}</code></pre>
+          </div>
+        {% endif %}
+
+        {% if section.links %}
+          <div class="docs-link-list">
+            {% for label, href in section.links %}
+              <a class="text-link" href="{{ href }}">{{ label }}</a>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </article>
+    {% endfor %}
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll("[data-copy-command]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const card = button.closest(".command-card");
+      const code = card ? card.querySelector("code") : null;
+      if (!code) return;
+      await navigator.clipboard.writeText(code.innerText);
+      const original = button.textContent;
+      button.textContent = "Copied";
+      window.setTimeout(() => {
+        button.textContent = original;
+      }, 1200);
+    });
+  });
+</script>
+{% endblock %}

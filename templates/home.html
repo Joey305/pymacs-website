@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}PyMACS | Molecular Dynamics Learning Hub{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow">From first structure to interpretable MD report</p>
+    <h1>Learn molecular dynamics by walking through PyMACS.</h1>
+    <p class="lede">A full educational website for people who are new to MD, curious about force fields, and ready to understand what every PyMACS script does from setup through analysis.</p>
+    <div class="hero-actions">
+      <a class="button primary" href="/basics.html">Start Learning</a>
+      <a class="button secondary" href="/workflow.html">Explore Workflow</a>
+      <a class="button secondary" href="/engine.html">Examine the Engine</a>
+    </div>
+  </div>
+  <div class="hero-visual" aria-label="PyMACS workflow summary">
+    <img src="{{ url_for('static', filename='img/pymacs-logo.png') }}" alt="PyMACS logo">
+    <div class="orbit-card one">Structure</div>
+    <div class="orbit-card two">CHARMM36</div>
+    <div class="orbit-card three">GROMACS</div>
+    <div class="orbit-card four">Analysis</div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="section-heading">
+    <p class="eyebrow">What PyMACS connects</p>
+    <h2>One pipeline, many concepts.</h2>
+  </div>
+  <div class="fact-grid">
+    {% for fact in quick_facts %}
+      <article class="fact-card">
+        <p>{{ fact.label }}</p>
+        <h3>{{ fact.value }}</h3>
+        <span>{{ fact.detail }}</span>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="content-grid">
+  <div class="section-heading">
+    <p class="eyebrow">Learning path</p>
+    <h2>Designed for someone starting from zero.</h2>
+  </div>
+  <div class="path-list">
+    {% for item in learning_path %}
+      <a class="path-item" href="{{ item.href }}">
+        <span>{{ loop.index }}</span>
+        <div>
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.body }}</p>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="band split">
+  <div>
+    <p class="eyebrow">PyMACS at a glance</p>
+    <h2>The scripts form a readable scientific story.</h2>
+    <p>PyMACS is not just a command runner. Each numbered script corresponds to a stage in the molecular dynamics argument: prepare the system, relax it, run it, analyze it, then communicate the result.</p>
+  </div>
+  <div class="timeline compact">
+    {% for step in script_steps %}
+      <a href="/workflow/{{ step.slug }}.html">
+        <span>{{ step.kicker }}</span>
+        <strong>{{ step.title }}</strong>
+        <small>{{ step.script }}</small>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="content-grid">
+  <div class="section-heading">
+    <p class="eyebrow">Representative outputs</p>
+    <h2>Raw trajectories become interpretable figures.</h2>
+  </div>
+  <div class="gallery-grid">
+    {% for item in gallery %}
+      <article class="gallery-card">
+        <img src="{{ url_for('static', filename='img/' ~ item.image) }}" alt="{{ item.title }}">
+        <div>
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.caption }}</p>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Analysis | PyMACS{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <p class="eyebrow">Trajectory analysis</p>
+  <h1>Analysis turns motion into evidence.</h1>
+  <p>PyMACS generates stability metrics, flexibility plots, compactness traces, contact maps, interaction summaries, ligand-centered network diagrams, and figurebooks.</p>
+</section>
+
+<section class="band">
+  <div class="metric-grid">
+    <article>
+      <h2>RMSD</h2>
+      <p>Tracks structural drift from a reference. A stable plateau is often reassuring; a continuing climb deserves inspection.</p>
+    </article>
+    <article>
+      <h2>RMSF</h2>
+      <p>Reports residue or atom flexibility. Peaks often indicate loops, termini, or contact regions that move substantially.</p>
+    </article>
+    <article>
+      <h2>Rg</h2>
+      <p>Measures compactness. It helps detect expansion, collapse, or large-scale breathing behavior.</p>
+    </article>
+    <article>
+      <h2>Contacts</h2>
+      <p>Identifies residues near the ligand or partner over time, separating persistent interactions from brief encounters.</p>
+    </article>
+  </div>
+</section>
+
+<section class="content-grid">
+  <div class="section-heading">
+    <p class="eyebrow">Output gallery</p>
+    <h2>Representative PyMACS analysis products.</h2>
+  </div>
+  <div class="gallery-grid wide">
+    {% for item in gallery %}
+      <article class="gallery-card">
+        <img src="{{ url_for('static', filename='img/' ~ item.image) }}" alt="{{ item.title }}">
+        <div>
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.caption }}</p>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

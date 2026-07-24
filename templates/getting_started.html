@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Run PyMACS | PyMACS{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <p class="eyebrow">Run PyMACS</p>
+  <h1>A first-run path for new users.</h1>
+  <p>{{ guide.intro }}</p>
+</section>
+
+<section class="band split">
+  <div>
+    <p class="eyebrow">Before running</p>
+    <h2>Know what needs to exist first.</h2>
+    <p>PyMACS automates a difficult workflow, but the scientific inputs still matter. Start from a curated example, then change one thing at a time when moving to a new system.</p>
+  </div>
+  <div class="check-list">
+    {% for item in guide.prerequisites %}
+      <span>{{ item }}</span>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="content-grid">
+  <div class="section-heading">
+    <p class="eyebrow">First run</p>
+    <h2>Follow the workflow in order.</h2>
+  </div>
+  <div class="run-list">
+    {% for step in guide.run_steps %}
+      <article class="run-card">
+        <span>{{ loop.index }}</span>
+        <div>
+          <h2>{{ step.title }}</h2>
+          <p>{{ step.body }}</p>
+          <pre><code>{{ step.command }}</code></pre>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="band">
+  <div class="section-heading">
+    <p class="eyebrow">Before production MD</p>
+    <h2>The three stabilization stages.</h2>
+  </div>
+  <div class="stage-link-grid">
+    <a href="/workflow/equilibration/energy-minimization.html">
+      <span>EM</span>
+      <strong>Energy minimization</strong>
+      <small>Relaxes severe clashes and bad contacts.</small>
+    </a>
+    <a href="/workflow/equilibration/nvt-equilibration.html">
+      <span>NVT</span>
+      <strong>Temperature equilibration</strong>
+      <small>Warms the system at fixed volume.</small>
+    </a>
+    <a href="/workflow/equilibration/npt-equilibration.html">
+      <span>NPT</span>
+      <strong>Pressure equilibration</strong>
+      <small>Lets box size and density settle.</small>
+    </a>
+  </div>
+</section>
+
+<section class="band">
+  <div class="section-heading">
+    <p class="eyebrow">Interpretation checks</p>
+    <h2>Do these before trusting the story.</h2>
+  </div>
+  <div class="check-grid">
+    {% for check in guide.checks %}
+      <article>{{ check }}</article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
