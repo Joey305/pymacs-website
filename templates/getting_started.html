@@ -1,15 +1,129 @@
 {% extends "base.html" %}
-{% block title %}Run PyMACS | PyMACS{% endblock %}
+{% block title %}Install &amp; Run | PyMACS{% endblock %}
 {% block content %}
 <section class="page-hero">
-  <p class="eyebrow">Run PyMACS</p>
+  <p class="eyebrow">Install &amp; Run</p>
   <h1>A first-run path for new users.</h1>
   <p>{{ guide.intro }}</p>
 </section>
 
+<section class="band step-zero-band">
+  <div class="section-heading">
+    <p class="eyebrow">Step 0 — Get the simulation engine</p>
+    <h2>Install GROMACS once. Use it everywhere.</h2>
+    <p>PyMACS uses GROMACS for molecular-dynamics setup, equilibration, production simulation, trajectory processing, and related workflows. The companion installer keeps the simulation engine at the system level so your normal shell and PyMACS Conda environments can share the same <code>gmx</code> executable.</p>
+  </div>
+
+  <div class="pill-grid" aria-label="GROMACS installer compatibility badges">
+    {% for badge in gromacs.badges %}
+      <span>{{ badge }}</span>
+    {% endfor %}
+  </div>
+
+  <div class="step-zero-layout">
+    <div class="command-card command-card-large">
+      <div class="command-head">
+        <span>Quick install command</span>
+        <button type="button" data-copy-command aria-label="Copy GROMACS install command">Copy install command</button>
+      </div>
+      <pre><code>{{ gromacs.quick_command }}</code></pre>
+    </div>
+
+    <div class="step-zero-copy">
+      <div class="cta-row">
+        <a class="button primary" href="/docs/gromacs-installation.html">Full installation guide</a>
+        <a class="button secondary" href="{{ gromacs.repo_url }}" target="_blank" rel="noopener noreferrer">View installer on GitHub</a>
+      </div>
+
+      <div class="callout">
+        <strong>Already have GROMACS?</strong>
+        <p>Run <code>{{ gromacs.verify_command }}</code>. If it works, you can continue directly to PyMACS installation instead of replacing a working setup.</p>
+      </div>
+
+      <div class="path-card-grid">
+        {% for path in gromacs.paths %}
+          <article class="path-card">
+            <h3>{{ path.title }}</h3>
+            <p>{{ path.body }}</p>
+          </article>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="install-journey" aria-label="PyMACS onboarding flow">
+    {% for item in gromacs.flow %}
+      <article>
+        <span>{{ item.step }}</span>
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.body }}</p>
+      </article>
+    {% endfor %}
+  </div>
+
+  <div class="architecture-shell" aria-label="Shared system GROMACS architecture">
+    <div class="shared-engine-diagram">
+      <strong>{{ gromacs.shared_engine.label }}</strong>
+      <div class="shared-engine-arrow" aria-hidden="true">→</div>
+      <div class="shared-engine-consumers">
+        {% for consumer in gromacs.shared_engine.consumers %}
+          <span>{{ consumer }}</span>
+        {% endfor %}
+      </div>
+    </div>
+    <p>{{ gromacs.shared_engine.message }}</p>
+  </div>
+</section>
+
+<section class="band quick-install-panel">
+  <div class="quick-install-copy">
+    <p class="eyebrow">Step 1 — Install PyMACS</p>
+    <h2>{{ quick_install.title }}</h2>
+    <p>{{ quick_install.summary }}</p>
+    <p>{{ quick_install.plain }}</p>
+    <div class="install-guards" aria-label="PyMACS installer safety checks">
+      {% for guard in quick_install.guards %}
+        <span>{{ guard }}</span>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="command-card command-card-large">
+    <div class="command-head">
+      <span>PyMACS installer</span>
+      <button type="button" data-copy-command aria-label="Copy PyMACS install command">Copy install command</button>
+    </div>
+    <pre><code>{{ quick_install.command }}</code></pre>
+  </div>
+</section>
+
+<section class="band environment-band">
+  <div class="section-heading">
+    <p class="eyebrow">Step 2 — Configure environments</p>
+    <h2>Create the Python environments and verify gmx inside them.</h2>
+    <p>{{ guide.environment_summary }}</p>
+  </div>
+  <div class="environment-layout">
+    <div class="command-card">
+      <div class="command-head">
+        <span>Environment setup and verification</span>
+        <button type="button" data-copy-command aria-label="Copy environment verification command">Copy command</button>
+      </div>
+      <pre><code>conda env create -f environment_cgenff.yml
+conda env create -f environment_mdanalysis.yml
+
+{{ gromacs.environment_check_command }}</code></pre>
+    </div>
+    <div class="check-list">
+      <span><code>which gmx</code> should point to <code>/usr/local/bin/gmx</code> in the shared workstation workflow.</span>
+      <span><code>gmx --version</code> confirms that GROMACS works before you spend time debugging PyMACS itself.</span>
+      <span><code>type -a gmx</code> helps diagnose Conda shadowing if an environment later exposes a different executable.</span>
+    </div>
+  </div>
+</section>
+
 <section class="band split">
   <div>
-    <p class="eyebrow">Before running</p>
+    <p class="eyebrow">Step 3 — Final prerequisites</p>
     <h2>Know what needs to exist first.</h2>
     <p>PyMACS automates a difficult workflow, but the scientific inputs still matter. Start from a curated example, then change one thing at a time when moving to a new system.</p>
   </div>
@@ -22,7 +136,7 @@
 
 <section class="content-grid">
   <div class="section-heading">
-    <p class="eyebrow">First run</p>
+    <p class="eyebrow">Step 4 — Run Example 1</p>
     <h2>Follow the workflow in order.</h2>
   </div>
   <div class="run-list">

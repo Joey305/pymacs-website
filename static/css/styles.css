@@ -296,6 +296,19 @@ img {
   border-color: color-mix(in srgb, var(--orange) 60%, var(--line));
 }
 
+.button:focus-visible,
+.theme-toggle:focus-visible,
+.nav-links a:focus-visible,
+.text-link:focus-visible,
+.resource-card:focus-visible,
+.path-item:focus-visible,
+.workflow-card:focus-visible,
+.docs-card:focus-visible,
+.command-head button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--orange) 72%, white);
+  outline-offset: 2px;
+}
+
 .hero-visual {
   position: relative;
   min-height: 520px;
@@ -420,6 +433,11 @@ img {
 
 .fact-card {
   padding: 1.1rem;
+}
+
+.fact-card .inline-link {
+  display: inline-flex;
+  margin-top: 0.75rem;
 }
 
 .fact-card p,
@@ -735,6 +753,152 @@ img {
   border-top: 5px solid var(--orange);
 }
 
+.onboarding-band {
+  margin-top: 0;
+}
+
+.onboarding-callout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.onboarding-actions {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.step-zero-band {
+  display: grid;
+  gap: 1.4rem;
+}
+
+.step-zero-layout,
+.environment-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.step-zero-copy {
+  display: grid;
+  gap: 1rem;
+}
+
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.path-card-grid,
+.info-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.path-card,
+.info-card,
+.docs-cta {
+  padding: 1rem;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.path-card h3,
+.info-card h3,
+.docs-cta h3,
+.install-journey h3 {
+  margin: 0 0 0.35rem;
+  line-height: 1.2;
+}
+
+.path-card p,
+.info-card p,
+.docs-cta p,
+.install-journey p,
+.architecture-shell p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.install-journey {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.install-journey.compact {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.install-journey article {
+  min-height: 148px;
+  padding: 1rem;
+  background: color-mix(in srgb, var(--surface) 86%, var(--surface-2));
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--orange);
+  border-radius: 8px;
+}
+
+.install-journey span {
+  display: inline-flex;
+  margin-bottom: 0.55rem;
+  color: var(--orange);
+  font-size: 0.78rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.architecture-shell {
+  display: grid;
+  gap: 1rem;
+  padding: 1.2rem;
+  background: color-mix(in srgb, var(--green) 6%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--green) 22%, var(--line));
+  border-radius: 8px;
+}
+
+.shared-engine-diagram {
+  display: grid;
+  grid-template-columns: minmax(180px, auto) auto minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
+}
+
+.shared-engine-diagram strong {
+  padding: 0.9rem 1rem;
+  background: #142017;
+  border: 1px solid color-mix(in srgb, var(--green) 55%, #142017);
+  border-radius: 8px;
+  color: #f5fff7;
+  text-align: center;
+}
+
+.shared-engine-arrow {
+  color: var(--orange);
+  font-size: 1.8rem;
+  font-weight: 900;
+}
+
+.shared-engine-consumers {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.shared-engine-consumers span {
+  padding: 0.62rem 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--green);
+  border-radius: 8px;
+  font-weight: 750;
+}
+
 .quick-install-panel > * {
   min-height: 0;
 }
@@ -1039,6 +1203,16 @@ img {
   font-size: 0.86rem;
 }
 
+.trouble-actions {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 0.7rem;
+}
+
+.trouble-actions p {
+  margin: 0;
+}
+
 .glossary-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -1210,6 +1384,15 @@ pre code {
   display: flex;
   flex-wrap: wrap;
   gap: 0.8rem;
+}
+
+.docs-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: color-mix(in srgb, var(--surface) 80%, var(--surface-2));
+  border-left: 4px solid var(--orange);
 }
 
 .engine-summary {
@@ -1568,7 +1751,10 @@ pre code {
   .stage-link-grid,
   .stage-specs,
   .warning-grid,
-  .engine-summary {
+  .engine-summary,
+  .install-journey,
+  .path-card-grid,
+  .info-card-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1579,7 +1765,11 @@ pre code {
   .example-start,
   .quick-install-panel,
   .example-walkthrough-head,
-  .example-brief {
+  .example-brief,
+  .step-zero-layout,
+  .environment-layout,
+  .shared-engine-diagram,
+  .onboarding-callout {
     grid-template-columns: 1fr;
   }
 
@@ -1656,7 +1846,10 @@ pre code {
   .stage-specs,
   .warning-grid,
   .engine-summary,
-  .footer-grid {
+  .footer-grid,
+  .install-journey,
+  .path-card-grid,
+  .info-card-grid {
     grid-template-columns: 1fr;
   }
 
@@ -1695,7 +1888,8 @@ pre code {
   }
 
   .resource-card,
-  .footer-bottom {
+  .footer-bottom,
+  .docs-cta {
     flex-direction: column;
     align-items: flex-start;
   }

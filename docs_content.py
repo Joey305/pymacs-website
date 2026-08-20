@@ -1,10 +1,146 @@
+from content import GROMACS_INSTALLER
+
+
 DOC_PAGES = [
+    {
+        "slug": "gromacs-installation",
+        "kicker": "GROMACS",
+        "title": "Install GROMACS for PyMACS on Linux or WSL2",
+        "meta_title": "Install GROMACS for PyMACS | PyMACS Documentation",
+        "meta_description": "Install and verify GROMACS for PyMACS on supported Linux and WSL2 systems, configure NVIDIA CUDA support, and use one system GROMACS executable across PyMACS Conda environments.",
+        "summary": "Install GROMACS for PyMACS on Linux or WSL2, verify the shared system executable, understand Conda-independent usage, and continue into the PyMACS workflow.",
+        "sections": [
+            {
+                "heading": "Overview",
+                "body": "PyMACS requires access to GROMACS for system setup, equilibration, production MD, trajectory processing, and related helper commands. The companion installer provides a reproducible Linux and WSL2 path that installs GROMACS at the system level instead of inside a Conda environment.",
+                "badges": GROMACS_INSTALLER["badges"],
+                "links": [
+                    ("Companion installer repository", GROMACS_INSTALLER["repo_url"]),
+                    ("Continue to PyMACS installation", "/docs/install.html"),
+                ],
+            },
+            {
+                "heading": "Who should use this installer?",
+                "cards": [
+                    {
+                        "title": "Good fit",
+                        "body": "Linux workstation users, WSL2 users, PyMACS users without a working GROMACS installation, and users who want one shared system gmx executable across base, cgenff, and mdanalysis.",
+                    },
+                    {
+                        "title": "Use another path",
+                        "body": "Managed HPC systems, administrator-provided module environments, and platforms not supported by the companion installer should generally keep using the local institutional GROMACS path instead of replacing it.",
+                    },
+                ],
+            },
+            {
+                "heading": "Why install GROMACS system-wide?",
+                "body": "Python dependencies and GROMACS solve different problems. PyMACS may use separate cgenff and mdanalysis environments for Python packages, but those environments should still call the same system executable at /usr/local/bin/gmx.",
+                "architecture": {
+                    "flow": GROMACS_INSTALLER["flow"],
+                    "engine_label": GROMACS_INSTALLER["shared_engine"]["label"],
+                    "consumers": GROMACS_INSTALLER["shared_engine"]["consumers"],
+                    "message": GROMACS_INSTALLER["shared_engine"]["message"],
+                },
+                "bullets": [
+                    "One GROMACS installation instead of duplicated environment-specific copies.",
+                    "Consistent debugging because every environment resolves to the same executable.",
+                    "Cleaner separation between Python package management and the MD engine.",
+                    "Versioned installation paths and build records that support reproducibility.",
+                ],
+            },
+            {
+                "heading": "Quick installation",
+                "body": "Run the companion installer from a normal Linux or WSL2 shell. The current repository installs GROMACS 2026.3 under /usr/local/gromacs-2026.3, creates a stable /usr/local/gromacs symlink, and exposes /usr/local/bin/gmx.",
+                "code": GROMACS_INSTALLER["quick_command"],
+                "links": [
+                    ("Full installation guide", GROMACS_INSTALLER["repo_url"]),
+                ],
+            },
+            {
+                "heading": "Verify the installation",
+                "body": "Refresh the current shell, then confirm that gmx runs and resolves to the intended system executable.",
+                "code": GROMACS_INSTALLER["shell_refresh_command"],
+                "bullets": [
+                    "Expected executable path: /usr/local/bin/gmx",
+                    "For a CUDA-enabled build, gmx --version should report GROMACS version 2026.3 and GPU support: CUDA when the installer detected a supported NVIDIA path.",
+                ],
+            },
+            {
+                "heading": "Verify across environments",
+                "body": "The point of this workflow is that Conda environments manage Python packages while the system GROMACS executable remains shared.",
+                "code": GROMACS_INSTALLER["environment_check_command"],
+                "bullets": [
+                    "base, mdanalysis, and cgenff should all resolve to /usr/local/bin/gmx in the shared workstation workflow.",
+                    "If one environment resolves somewhere else, inspect the PATH and check for a second GROMACS installation inside that environment.",
+                ],
+            },
+            {
+                "heading": "NVIDIA GPU / CUDA and WSL2",
+                "body": "The companion repository can detect NVIDIA GPU availability and build CUDA-enabled GROMACS when the machine and toolkit satisfy the documented requirements. On WSL2, Windows provides the NVIDIA driver layer and the Linux side should follow the repository's WSL-aware CUDA guidance.",
+                "code": GROMACS_INSTALLER["gpu_check_command"],
+                "bullets": [
+                    "Check GPU visibility with nvidia-smi before troubleshooting CUDA-enabled builds.",
+                    "The current installer repository documents CUDA >= 12.1 support and prefers cuda-toolkit-12-6 on supported Ubuntu and WSL2 paths.",
+                    "Do not install a Linux NVIDIA display driver inside WSL2; follow the repository's toolkit guidance instead.",
+                ],
+                "links": [
+                    ("Advanced installer options on GitHub", GROMACS_INSTALLER["repo_url"]),
+                ],
+            },
+            {
+                "heading": "Conda shadowing and gmx: command not found",
+                "body": "A later Conda package can expose a different gmx than the intended system executable. When that happens, PyMACS may call the wrong binary or fail to find the system copy you expected.",
+                "code": """type -a gmx
+
+hash -r
+source /etc/profile.d/gromacs.sh
+which gmx
+gmx --version""",
+                "bullets": [
+                    "The intended system executable for this workflow is /usr/local/bin/gmx.",
+                    "If a Conda environment exposes its own $CONDA_PREFIX/bin/gmx, remove that separate Conda GROMACS package or call the system executable explicitly.",
+                    "If gmx is still missing, rerun the latest companion installer and follow its troubleshooting guidance.",
+                ],
+            },
+            {
+                "heading": "Existing GROMACS installations and HPC users",
+                "cards": [
+                    {
+                        "title": "Already have GROMACS?",
+                        "body": "If gmx --version already works and the version and build are appropriate for your PyMACS workflow, you may not need to install another copy.",
+                    },
+                    {
+                        "title": "Cluster or MPI environment",
+                        "body": "Workstation defaults should not automatically replace cluster-specific installations. HPC users should normally use module systems, administrator-provided GROMACS builds, and cluster-specific MPI or GPU instructions, then point PyMACS at the proper executable.",
+                    },
+                ],
+            },
+            {
+                "heading": "Continue to PyMACS",
+                "cta": {
+                    "title": "GROMACS working?",
+                    "body": "Continue to the PyMACS installation guide, then create the cgenff and mdanalysis environments and run Example 1.",
+                    "label": "Install PyMACS",
+                    "href": "/docs/install.html",
+                },
+            },
+        ],
+    },
     {
         "slug": "install",
         "kicker": "Start here",
         "title": "Install PyMACS and create a clean working folder",
         "summary": "Use this page when you need PyMACS files in a fresh directory and want the safest path before running the examples.",
         "sections": [
+            {
+                "heading": "Before installing PyMACS",
+                "body": "PyMACS requires access to a working GROMACS installation. For supported Linux and WSL2 workstations, start with the companion installer. If your institution already provides GROMACS on a cluster or managed workstation, verify that path first and continue when gmx is available.",
+                "code": "gmx --version",
+                "links": [
+                    ("Install GROMACS", "/docs/gromacs-installation.html"),
+                    ("Examples page", "/examples.html"),
+                ],
+            },
             {
                 "heading": "What the installer does",
                 "body": "The Quick Start installer temporarily clones the PyMACS repository, copies the files into the folder your terminal is currently pointing at, skips the cloned repository's .git folder, includes hidden project files, and removes the temporary clone when it is done.",
@@ -94,6 +230,10 @@ EOF""",
                     "Confirm GROMACS is visible with gmx --version.",
                     "Start with the Example 1 workflow before attempting a new scientific system.",
                 ],
+                "links": [
+                    ("Need GROMACS first?", "/docs/gromacs-installation.html"),
+                    ("Requirements and environments", "/docs/requirements-environments.html"),
+                ],
             },
         ],
     },
@@ -150,6 +290,20 @@ EOF""",
                 ],
             },
             {
+                "heading": "How the stack fits together",
+                "body": "Conda environments manage Python dependencies. They do not need to own the system GROMACS installation. In the companion workstation workflow, all environments should still call /usr/local/bin/gmx.",
+                "architecture": {
+                    "flow": [
+                        {"step": "System", "title": "GROMACS", "body": "/usr/local/bin/gmx"},
+                        {"step": "Conda", "title": "cgenff", "body": "Preparation and parameterization dependencies"},
+                        {"step": "Conda", "title": "mdanalysis", "body": "Trajectory analysis and plotting dependencies"},
+                    ],
+                    "engine_label": "/usr/local/bin/gmx",
+                    "consumers": ["cgenff", "mdanalysis", "future environments"],
+                    "message": "PyMACS uses the Conda environments for Python packages while keeping the simulation engine independent and shared.",
+                },
+            },
+            {
                 "heading": "Recommended Conda environments",
                 "code": """conda env create -f environment_cgenff.yml
 conda env create -f environment_mdanalysis.yml
@@ -160,6 +314,21 @@ python 1_AutomateGromacs.py --help
 conda activate mdanalysis
 python 2_AutomateGromacs.py --help
 python 3A_AutomateGromacs.py --help""",
+            },
+            {
+                "heading": "Verify GROMACS visibility",
+                "body": "Run these checks after environment creation and again if a later package install changes which gmx executable is active.",
+                "code": """which gmx
+gmx --version
+type -a gmx""",
+                "bullets": [
+                    "gmx --version confirms that GROMACS is callable.",
+                    "which gmx shows the active executable that your shell will use first.",
+                    "type -a gmx shows every visible gmx on PATH and helps diagnose Conda shadowing.",
+                ],
+                "links": [
+                    ("See GROMACS installation", "/docs/gromacs-installation.html"),
+                ],
             },
             {
                 "heading": "Non-Conda fallback",

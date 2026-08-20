@@ -17,7 +17,7 @@
     <div class="command-card">
       <div class="command-head">
         <span>Sanity check</span>
-        <button type="button" data-copy-command>Copy</button>
+        <button type="button" data-copy-command aria-label="Copy sanity-check commands">Copy</button>
       </div>
       <pre><code>pwd
 ls 1_AutomateGromacs.py 2_AutomateGromacs.py 3A_AutomateGromacs.py Example_Choices</code></pre>
@@ -39,7 +39,7 @@ ls 1_AutomateGromacs.py 2_AutomateGromacs.py 3A_AutomateGromacs.py Example_Choic
     <div class="command-card command-card-large">
       <div class="command-head">
         <span>One-command installer</span>
-        <button type="button" data-copy-command>Copy install command</button>
+        <button type="button" data-copy-command aria-label="Copy PyMACS install command">Copy install command</button>
       </div>
       <pre><code>{{ quick_install.command }}</code></pre>
     </div>
@@ -97,7 +97,7 @@ ls 1_AutomateGromacs.py 2_AutomateGromacs.py 3A_AutomateGromacs.py Example_Choic
               <div class="command-card">
                 <div class="command-head">
                   <span>Terminal commands</span>
-                  <button type="button" data-copy-command>Copy</button>
+                  <button type="button" data-copy-command aria-label="Copy example terminal commands">Copy</button>
                 </div>
                 <pre><code>{{ step.command }}</code></pre>
               </div>
@@ -137,7 +137,11 @@ ls</code></pre>
       <article>
         <h3>Missing GROMACS</h3>
         <pre><code>gmx --version</code></pre>
-        <p>If this fails, activate the environment or module that provides GROMACS before continuing.</p>
+        <p>If this fails, choose the path that matches your machine instead of guessing.</p>
+        <div class="trouble-actions">
+          <a class="text-link" href="/docs/gromacs-installation.html">Local Linux / WSL2: Install GROMACS →</a>
+          <p>HPC / cluster: load the GROMACS module or environment provided by your institution.</p>
+        </div>
       </article>
       <article>
         <h3>Missing outputs</h3>
@@ -148,19 +152,4 @@ ls</code></pre>
   </section>
 </section>
 
-<script>
-  document.querySelectorAll("[data-copy-command]").forEach((button) => {
-    button.addEventListener("click", async () => {
-      const card = button.closest(".command-card");
-      const code = card ? card.querySelector("code") : null;
-      if (!code) return;
-      await navigator.clipboard.writeText(code.innerText);
-      const original = button.textContent;
-      button.textContent = "Copied";
-      window.setTimeout(() => {
-        button.textContent = original;
-      }, 1200);
-    });
-  });
-</script>
 {% endblock %}

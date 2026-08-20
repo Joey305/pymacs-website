@@ -3,6 +3,8 @@ QUICK_FACTS = [
         "label": "Core engine",
         "value": "GROMACS",
         "detail": "PyMACS automates the commands that prepare, simulate, and process GROMACS systems.",
+        "link_label": "Need GROMACS? Install it",
+        "href": "/docs/gromacs-installation.html",
     },
     {
         "label": "Primary force field",
@@ -20,6 +22,73 @@ QUICK_FACTS = [
         "detail": "PyMACS turns raw MD files into stability plots, contact maps, networks, and figurebooks.",
     },
 ]
+
+
+GROMACS_INSTALLER = {
+    "repo_url": "https://github.com/Joey305/gromacs-installation",
+    "doc_url": "/docs/gromacs-installation.html",
+    "badges": [
+        "Linux",
+        "WSL2",
+        "GROMACS 2026.3",
+        "NVIDIA CUDA",
+        "Conda-independent",
+    ],
+    "quick_command": """git clone https://github.com/Joey305/gromacs-installation.git
+cd gromacs-installation
+chmod +x install_gromacs.sh
+./install_gromacs.sh
+hash -r
+source /etc/profile.d/gromacs.sh
+gmx --version""",
+    "verify_command": "gmx --version",
+    "shell_refresh_command": """hash -r
+source /etc/profile.d/gromacs.sh
+gmx --version
+which gmx""",
+    "environment_check_command": """conda activate base
+which gmx
+gmx --version
+
+conda activate mdanalysis
+which gmx
+gmx --version
+
+conda activate cgenff
+which gmx
+gmx --version""",
+    "shadow_check_command": """type -a gmx
+/usr/local/bin/gmx --version""",
+    "gpu_check_command": """nvidia-smi
+gmx --version""",
+    "flow": [
+        {"step": "1", "title": "GROMACS", "body": "System simulation engine"},
+        {"step": "2", "title": "PyMACS", "body": "Automation scripts and workflow"},
+        {"step": "3", "title": "Python environments", "body": "cgenff and mdanalysis"},
+        {"step": "4", "title": "First simulation", "body": "Run Example 1"},
+    ],
+    "shared_engine": {
+        "label": "/usr/local/bin/gmx",
+        "consumers": [
+            "base",
+            "cgenff",
+            "mdanalysis",
+            "future environments",
+            "ordinary shell",
+        ],
+        "message": "Conda manages the Python environments. GROMACS remains a shared system-level simulation engine.",
+    },
+    "paths": [
+        {
+            "title": "Local Linux / WSL2 workstation",
+            "body": "Use the PyMACS companion installer when you want a reproducible system-wide GROMACS build that stays visible from your normal shell and Conda environments.",
+        },
+        {
+            "title": "University cluster / HPC / SLURM environment",
+            "body": "Use the GROMACS module or administrator-managed installation provided by the institution whenever appropriate. PyMACS can work with alternate GROMACS executables supported by the project.",
+        },
+    ],
+}
 
 
 LEARNING_PATH = [
@@ -54,12 +123,13 @@ LEARNING_PATH = [
 GETTING_STARTED = {
     "intro": "The recommended first experience is the curated protein-ligand walkthrough. It shows the full rhythm of PyMACS without asking a new user to design a new simulation from scratch.",
     "prerequisites": [
-        "GROMACS available on the machine or cluster where the simulation will run",
+        "A working GROMACS executable. Local Linux and WSL2 users can use the companion installer; HPC users should use the module or managed build provided by their institution.",
         "The PyMACS repository files, including MDP templates and force-field folders",
         "The cgenff environment for setup and ligand conversion",
         "The mdanalysis environment for simulation control, analysis, plotting, and reports",
         "Ligand CGenFF files when running ligand or cofactor systems",
     ],
+    "environment_summary": "After GROMACS is available, install PyMACS, create the two recommended Conda environments, and confirm that both environments still resolve to the same shared system gmx executable.",
     "run_steps": [
         {
             "title": "Create a clean run folder",
@@ -1150,6 +1220,11 @@ RESOURCES = [
         "title": "Output gallery in the repository",
         "href": "https://github.com/schurerlab/Pymacs/tree/main/docs",
         "body": "Repository documentation that explains expected plots, CSV files, network panels, and figurebooks.",
+    },
+    {
+        "title": "PyMACS GROMACS Installer",
+        "href": "https://github.com/Joey305/gromacs-installation",
+        "body": "Reproducible system-wide GROMACS installation for supported Linux and WSL2 PyMACS workstations, including optional NVIDIA CUDA acceleration and Conda-independent gmx access.",
     },
     {
         "title": "GROMACS documentation",

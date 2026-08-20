@@ -21,6 +21,25 @@
   </div>
 </section>
 
+<section class="band onboarding-band">
+  <div class="onboarding-callout">
+    <div>
+      <p class="eyebrow">New to GROMACS?</p>
+      <h2>Start from a clean simulation engine installation.</h2>
+      <p>PyMACS includes a companion installation path for supported Linux and WSL2 systems, allowing one system GROMACS installation to work across your PyMACS environments.</p>
+      <div class="pill-grid" aria-label="Supported GROMACS installer features">
+        {% for badge in gromacs.badges %}
+          <span>{{ badge }}</span>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="onboarding-actions">
+      <a class="button primary" href="/getting-started.html">Install &amp; Run PyMACS</a>
+      <a class="button secondary" href="/docs/gromacs-installation.html">GROMACS Installation</a>
+    </div>
+  </div>
+</section>
+
 <section class="band">
   <div class="section-heading">
     <p class="eyebrow">What PyMACS connects</p>
@@ -32,6 +51,9 @@
         <p>{{ fact.label }}</p>
         <h3>{{ fact.value }}</h3>
         <span>{{ fact.detail }}</span>
+        {% if fact.href %}
+          <a class="text-link inline-link" href="{{ fact.href }}">{{ fact.link_label }} →</a>
+        {% endif %}
       </article>
     {% endfor %}
   </div>

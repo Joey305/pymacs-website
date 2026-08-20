@@ -7,6 +7,7 @@ from content import (
     ENGINE_STEPS,
     EXAMPLE_SETS,
     FORCE_FIELDS,
+    GROMACS_INSTALLER,
     GETTING_STARTED,
     GLOSSARY,
     LEARNING_PATH,
@@ -27,11 +28,13 @@ def inject_site_context():
         "site_name": "PyMACS",
         "github_url": "https://github.com/schurerlab/Pymacs",
         "paper_url": "https://www.sciencedirect.com/science/article/pii/S0223523426004836",
+        "gromacs_installer_url": GROMACS_INSTALLER["repo_url"],
+        "gromacs_docs_url": "/docs/gromacs-installation.html",
         "nav_items": [
             {"label": "Home", "href": "/", "active": ["home"]},
             {"label": "MD Basics", "href": "/basics.html", "active": ["basics"]},
             {"label": "Force Fields", "href": "/force-fields.html", "active": ["force_fields"]},
-            {"label": "Run PyMACS", "href": "/getting-started.html", "active": ["getting_started"]},
+            {"label": "Install & Run", "href": "/getting-started.html", "active": ["getting_started"]},
             {"label": "Workflow", "href": "/workflow.html", "active": ["workflow", "workflow_detail", "equilibration_detail"]},
             {"label": "Docs", "href": "/docs.html", "active": ["docs_index", "docs_detail"]},
             {"label": "Analysis", "href": "/analysis.html", "active": ["analysis"]},
@@ -46,6 +49,7 @@ def inject_site_context():
 def home():
     return render_template(
         "home.html",
+        gromacs=GROMACS_INSTALLER,
         quick_facts=QUICK_FACTS,
         learning_path=LEARNING_PATH,
         script_steps=SCRIPT_STEPS,
@@ -68,7 +72,12 @@ def force_fields():
 @app.route("/getting-started.html")
 @app.route("/getting-started")
 def getting_started():
-    return render_template("getting_started.html", guide=GETTING_STARTED)
+    return render_template(
+        "getting_started.html",
+        guide=GETTING_STARTED,
+        gromacs=GROMACS_INSTALLER,
+        quick_install=QUICK_INSTALL,
+    )
 
 
 @app.route("/engine.html")

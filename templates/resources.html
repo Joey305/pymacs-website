@@ -10,7 +10,7 @@
 <section class="content-grid">
   <div class="resource-list">
     {% for resource in resources %}
-      <a class="resource-card" href="{{ resource.href }}">
+      <a class="resource-card" href="{{ resource.href }}"{% if resource.href.startswith('http') %} target="_blank" rel="noopener noreferrer"{% endif %}>
         <div>
           <h2>{{ resource.title }}</h2>
           <p>{{ resource.body }}</p>
