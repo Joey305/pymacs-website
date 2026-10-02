@@ -38,6 +38,8 @@ conda config --set solver libmamba
 conda env create -f environment_triton_setup.yml
 conda env create -f environment_triton_analysis.yml
 
+module purge
+module load gcc-runtime/13.4.0-none-none-gh6rpjx
 module load gromacs/2025.1-gcc-13.4.0-6vq7xfo
 gmx_mpi --version
 
@@ -47,7 +49,7 @@ python --version
 
 conda activate mdanalysis
 python --version</code></pre></div>
-    <div class="callout"><strong>Every new login shell</strong><p>Run <code>source "$HOME/miniforge3/etc/profile.d/conda.sh"</code>, then activate the environment you need. The installation and two <code>conda env create</code> commands are a one-time account setup. The Triton-specific files intentionally avoid the workstation <code>linux-64</code> and CUDA pins.</p></div>
+    <div class="callout"><strong>Every new login shell</strong><p>Run <code>source "$HOME/miniforge3/etc/profile.d/conda.sh"</code>, then activate the environment you need. Before any GROMACS command, run <code>module purge</code>, load the GCC runtime and GROMACS modules shown above, and confirm <code>gmx_mpi --version</code>. Triton may print an older-module dependency warning even when GROMACS loads correctly; the version command is the decisive check.</p></div>
   </div>
 </section>
 
@@ -62,6 +64,8 @@ python --version</code></pre></div>
 <section class="band">
   <div class="section-heading"><p class="eyebrow">Step 4 — Prepare the system</p><h2>Run PyMACS Step 1 on Triton.</h2><p>This creates the topology, box, solvated/ionized system, and <code>em.tpr</code>. It is the required checkpoint before an LSF GPU job can be submitted.</p></div>
   <div class="command-card command-card-large"><div class="command-head"><span>Step 1 preparation</span><button type="button" data-copy-command>Copy command</button></div><pre><code>conda activate cgenff
+module purge
+module load gcc-runtime/13.4.0-none-none-gh6rpjx
 module load gromacs/2025.1-gcc-13.4.0-6vq7xfo
 python pymacs_run.py setup
 
@@ -95,7 +99,7 @@ tail -f mdrun.log</code></pre></div>
   <div class="command-card command-card-large"><pre><code>source "$HOME/miniforge3/etc/profile.d/conda.sh"
 python pymacs_run.py configure
 python pymacs_run.py validate
-conda activate cgenff && module load gromacs/2025.1-gcc-13.4.0-6vq7xfo
+conda activate cgenff && module purge && module load gcc-runtime/13.4.0-none-none-gh6rpjx && module load gromacs/2025.1-gcc-13.4.0-6vq7xfo
 python pymacs_run.py setup
 python pymacs_run.py submit --profile triton --with-analysis
 python pymacs_run.py resume --profile triton  # only if production needs continuation</code></pre></div>
