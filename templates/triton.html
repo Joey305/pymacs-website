@@ -56,14 +56,19 @@ python pymacs_run.py status</code></pre></div>
 </section>
 
 <section class="band quick-install-panel">
-  <div class="quick-install-copy"><p class="eyebrow">Step 5 — Submit production MD</p><h2>Turn this folder into one Triton GPU job.</h2><p>The bundled <code>triton</code> profile writes a versioned LSF script in the current folder. It requests one GPU and 16 CPU threads, loads the tested GROMACS module, activates <code>mdanalysis</code>, and runs PyMACS Step 2 headlessly.</p><div class="cta-row"><a class="button secondary" href="/workflow/simulation.html">Learn what Step 2 does</a></div></div>
-  <div class="command-card command-card-large"><div class="command-head"><span>Submit and monitor</span><button type="button" data-copy-command>Copy command</button></div><pre><code>python pymacs_run.py submit --profile triton
+  <div class="quick-install-copy"><p class="eyebrow">Step 5 — Submit MD, analysis, and reporting</p><h2>Use the GPU for MD; free it for CPU analysis.</h2><p>The Triton profile submits the 1-GPU Step 2 job plus a separate dependent CPU job. The CPU job waits for successful MD, runs memory-safe chunked Step 3A, dispatches 3B or 3C when appropriate, and generates the Step 4 figurebook.</p><div class="cta-row"><a class="button secondary" href="/workflow/simulation.html">Learn what Step 2 does</a></div></div>
+  <div class="command-card command-card-large"><div class="command-head"><span>Submit and monitor</span><button type="button" data-copy-command>Copy command</button></div><pre><code>python pymacs_run.py submit --profile triton --with-analysis
 
 # Replace JOBID with the number printed by submission
 bjobs -u "$USER" -w
 bpeek JOBID
 
 tail -f mdrun.log</code></pre></div>
+</section>
+
+<section class="band split">
+  <div><p class="eyebrow">Automatic post-MD analysis</p><h2>Chunked by default, no GPU required.</h2><p>The configuration Q&amp;A records analysis threads, chunk size, interface or ligand settings, and whether to build the figurebook. The default chunk size is 1,000 frames, so large trajectories are processed incrementally rather than loaded entirely into memory.</p></div>
+  <div class="check-list"><span>The dependent analysis job uses 8 CPU slots and no GPU.</span><span>Choose <code>--with-analysis</code> to submit both jobs together.</span><span>Use <code>python pymacs_run.py submit-analysis --profile triton</code> to run analysis separately later.</span></div>
 </section>
 
 <section class="band split">
@@ -77,7 +82,7 @@ tail -f mdrun.log</code></pre></div>
 python pymacs_run.py validate
 conda activate cgenff && module load gromacs/2025.1-gcc-13.4.0-6vq7xfo
 python pymacs_run.py setup
-python pymacs_run.py submit --profile triton
+python pymacs_run.py submit --profile triton --with-analysis
 python pymacs_run.py resume --profile triton  # only if production needs continuation</code></pre></div>
 </section>
 {% endblock %}
