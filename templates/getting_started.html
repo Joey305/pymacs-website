@@ -12,6 +12,27 @@
   </div>
 </section>
 
+<section class="band environment-band">
+  <div class="section-heading">
+    <p class="eyebrow">Before Step 0 — Install Miniconda</p>
+    <h2>Install Conda once, then create PyMACS environments.</h2>
+    <p>Use this local-workstation step if <code>conda --version</code> reports “command not found.” It installs Miniconda into your home directory without requiring administrator access. Triton users should instead use the cluster-specific Conda step on the <a href="/triton.html">Triton walkthrough</a>.</p>
+  </div>
+  <div class="environment-layout">
+    <div class="command-card command-card-large">
+      <div class="command-head"><span>macOS Apple Silicon (M-series) Miniconda install</span><button type="button" data-copy-command aria-label="Copy Miniconda install command">Copy command</button></div>
+      <pre><code>curl -fsSLo "$HOME/Miniconda3-latest-MacOSX-arm64.sh" https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh
+bash "$HOME/Miniconda3-latest-MacOSX-arm64.sh" -b -p "$HOME/miniconda3"
+eval "$("$HOME/miniconda3/bin/conda" shell.bash hook)"
+conda init bash
+
+# Close and reopen Terminal once, then confirm:
+conda --version</code></pre>
+    </div>
+    <div class="callout"><strong>Different computer?</strong><p>For Intel macOS or Linux, download the matching Miniconda installer from <a href="https://docs.anaconda.com/miniconda/" target="_blank" rel="noopener noreferrer">Anaconda’s Miniconda documentation</a>, then use the same <code>-b -p "$HOME/miniconda3"</code> installation pattern. Do not run the macOS command on Triton.</p></div>
+  </div>
+</section>
+
 <section class="band step-zero-band">
   <div class="section-heading">
     <p class="eyebrow">Step 0 — Get the simulation engine</p>
