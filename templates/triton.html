@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Triton at UM | PyMACS{% endblock %}
+{% block meta_description %}A guided PyMACS workflow for University of Miami Triton users: install, configure one simulation folder, submit GROMACS GPU jobs through LSF, monitor, and resume safely.{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <p class="eyebrow">University of Miami · Triton</p>
+  <h1>Run one PyMACS simulation folder on Triton.</h1>
+  <p>Each structure gets its own folder. The guided PyMACS runner records your choices, prepares the system with <code>gmx_mpi</code>, and submits one checkpoint-safe GPU job through Triton’s LSF scheduler.</p>
+  <div class="pill-grid" aria-label="Triton workflow characteristics">
+    <span>IBM LSF scheduler</span><span>GROMACS <code>gmx_mpi</code></span><span>One folder · one structure · one simulation</span><span>GPU submission and restart support</span>
+  </div>
+</section>
+
+<section class="band split">
+  <div><p class="eyebrow">Before you start</p><h2>Use this page only on Triton.</h2><p>This walkthrough is for University of Miami users who can log into the Triton cluster. It does not replace the normal local <a href="/getting-started.html">Install &amp; Run guide</a>.</p></div>
+  <div class="check-list"><span>Connect with <code>ssh triton</code> from a configured UM account.</span><span>Start in a clean folder containing one <code>.pdb</code>, <code>.cif</code>, or <code>.mmcif</code> structure.</span><span>Protein–protein and protein–peptide systems do not require CGenFF ligand parameterization.</span></div>
+</section>
+
+<section class="band quick-install-panel">
+  <div class="quick-install-copy"><p class="eyebrow">Step 1 — Install PyMACS into this run folder</p><h2>Copy a fresh, self-contained PyMACS instance beside your structure.</h2><p>Make and enter a folder for one system, put the input structure there, then run the installer below. New installs include the guided <code>pymacs_run.py</code> helper and the Triton LSF profile.</p></div>
+  <div class="command-card command-card-large"><div class="command-head"><span>PyMACS installer</span><button type="button" data-copy-command>Copy install command</button></div><pre><code>{{ quick_install.command }}</code></pre></div>
+</section>
+
+<section class="band environment-band">
+  <div class="section-heading"><p class="eyebrow">Step 2 — Verify Triton tools</p><h2>Confirm the existing PyMACS environments and MPI GROMACS.</h2><p>These checks separate a cluster-environment problem from a simulation-folder problem. The lab’s usual Triton environments are named <code>cgenff</code> and <code>mdanalysis</code>.</p></div>
+  <div class="environment-layout">
+    <div class="command-card"><div class="command-head"><span>Module and environment verification</span><button type="button" data-copy-command>Copy command</button></div><pre><code>module load gromacs/2025.1-gcc-13.4.0-6vq7xfo
+gmx_mpi --version
+
+conda env list
+conda activate cgenff
+python --version
+
+conda activate mdanalysis
+python --version</code></pre></div>
+    <div class="callout"><strong>First-time Triton account?</strong><p>If <code>cgenff</code> or <code>mdanalysis</code> is absent, stop here and ask the lab for the current Triton environment setup. Do not start a simulation until <code>gmx_mpi --version</code> works and both environments are available.</p></div>
+  </div>
+</section>
+
+<section class="content-grid">
+  <div class="section-heading"><p class="eyebrow">Step 3 — Guided configuration</p><h2>Answer questions once; save the scientific choices in this folder.</h2><p>The Q&amp;A finds structures, detects PDB/mmCIF chains, lets you retain intended chains, names them, and presents numbered box options. It writes <code>pymacs_run.json</code>, which later commands read without repeating questions.</p></div>
+  <div class="run-list">
+    <article class="run-card"><span>1</span><div><h2>Start the Q&amp;A</h2><p>For protein–protein or protein–peptide systems, select the matching system type. Choose dodecahedron unless you have a specific reason to use another box.</p><pre><code>python pymacs_run.py configure</code></pre></div></article>
+    <article class="run-card"><span>2</span><div><h2>Review saved answers</h2><p>Validation confirms the input structure and required choices before PyMACS changes the folder.</p><pre><code>python pymacs_run.py validate</code></pre></div></article>
+  </div>
+</section>
+
+<section class="band">
+  <div class="section-heading"><p class="eyebrow">Step 4 — Prepare the system</p><h2>Run PyMACS Step 1 on Triton.</h2><p>This creates the topology, box, solvated/ionized system, and <code>em.tpr</code>. It is the required checkpoint before an LSF GPU job can be submitted.</p></div>
+  <div class="command-card command-card-large"><div class="command-head"><span>Step 1 preparation</span><button type="button" data-copy-command>Copy command</button></div><pre><code>conda activate cgenff
+module load gromacs/2025.1-gcc-13.4.0-6vq7xfo
+python pymacs_run.py setup
+
+python pymacs_run.py status</code></pre></div>
+  <div class="callout"><strong>Do not submit until setup succeeds.</strong><p>The submit command checks for <code>topol.top</code>, <code>solv_ions.gro</code>, and <code>em.tpr</code>. Missing inputs stop the submission rather than sending an invalid job to the queue.</p></div>
+</section>
+
+<section class="band quick-install-panel">
+  <div class="quick-install-copy"><p class="eyebrow">Step 5 — Submit production MD</p><h2>Turn this folder into one Triton GPU job.</h2><p>The bundled <code>triton</code> profile writes a versioned LSF script in the current folder. It requests one GPU and 16 CPU threads, loads the tested GROMACS module, activates <code>mdanalysis</code>, and runs PyMACS Step 2 headlessly.</p><div class="cta-row"><a class="button secondary" href="/workflow/simulation.html">Learn what Step 2 does</a></div></div>
+  <div class="command-card command-card-large"><div class="command-head"><span>Submit and monitor</span><button type="button" data-copy-command>Copy command</button></div><pre><code>python pymacs_run.py submit --profile triton
+
+# Replace JOBID with the number printed by submission
+bjobs -u "$USER" -w
+bpeek JOBID
+
+tail -f mdrun.log</code></pre></div>
+</section>
+
+<section class="band split">
+  <div><p class="eyebrow">Step 6 — Resume safely</p><h2>Walltime is not a failed simulation.</h2><p>Triton jobs have a walltime limit. PyMACS writes GROMACS checkpoints during production; use the resume command to submit the same folder again from its latest checkpoint.</p><pre><code>python pymacs_run.py resume --profile triton</code></pre></div>
+  <div class="check-list"><span>Use <code>python pymacs_run.py status</code> before resubmitting.</span><span>Keep all generated files in the same run folder.</span><span>Use <a href="/workflow/trajectory-analysis.html">Step 3A analysis</a> after production MD completes.</span></div>
+</section>
+
+<section class="band">
+  <div class="section-heading"><p class="eyebrow">The whole Triton path</p><h2>One folder, six commands.</h2></div>
+  <div class="command-card command-card-large"><pre><code>python pymacs_run.py configure
+python pymacs_run.py validate
+conda activate cgenff && module load gromacs/2025.1-gcc-13.4.0-6vq7xfo
+python pymacs_run.py setup
+python pymacs_run.py submit --profile triton
+python pymacs_run.py resume --profile triton  # only if production needs continuation</code></pre></div>
+</section>
+{% endblock %}

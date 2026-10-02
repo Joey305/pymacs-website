@@ -80,6 +80,12 @@ def getting_started():
     )
 
 
+@app.route("/triton.html")
+@app.route("/triton")
+def triton():
+    return render_template("triton.html", gromacs=GROMACS_INSTALLER, quick_install=QUICK_INSTALL)
+
+
 @app.route("/engine.html")
 @app.route("/engine")
 def engine():

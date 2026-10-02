@@ -12,6 +12,7 @@ PyMACS is a Python-based automation suite for GROMACS molecular dynamics setup, 
 | [MD Basics](https://www.pymacs.com/basics.html) | Atoms, forces, time steps, temperature, pressure, trajectories, and scientific interpretation |
 | [Force Fields](https://www.pymacs.com/force-fields.html) | CHARMM36, CHARMM36/LJ-PME, CGenFF, AMBER, OPLS, GROMOS, Martini, and why PyMACS centers CHARMM |
 | [Run PyMACS](https://www.pymacs.com/getting-started.html) | First-run guide for preparing, simulating, analyzing, and reporting a PyMACS system |
+| [Triton at UM](https://www.pymacs.com/triton.html) | University of Miami Triton walkthrough: single-folder setup, LSF GPU submission, monitoring, and restart |
 | [Workflow](https://www.pymacs.com/workflow.html) | Script-by-script map of the PyMACS pipeline |
 | [Engine](https://www.pymacs.com/engine.html) | The manual bash and analysis steps that PyMACS expedites |
 | [Documentation Hub](https://www.pymacs.com/docs.html) | README-level technical documentation broken into clickable pages |
@@ -91,6 +92,7 @@ pymacs-website/
     ├── basics.html
     ├── force_fields.html
     ├── getting_started.html
+    ├── triton.html
     ├── workflow.html
     ├── workflow_detail.html
     ├── equilibration_detail.html
