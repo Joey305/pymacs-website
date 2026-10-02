@@ -28,10 +28,12 @@
 </section>
 
 <section class="band environment-band">
-  <div class="section-heading"><p class="eyebrow">Step 2 — Load Miniconda and create the environments</p><h2>Use Triton's supported Miniconda module.</h2><p>Do not install an x86 Miniconda distribution on Triton: its POWER9 nodes use <code>linux-ppc64le</code>. Load the cluster-provided module, enable <code>conda activate</code> in this shell, then create the two native PyMACS environments once per account.</p></div>
+  <div class="section-heading"><p class="eyebrow">Step 2 — Install Miniforge and create the environments</p><h2>Use a personal POWER9 Conda installation.</h2><p>Triton uses <code>linux-ppc64le</code>, so install the matching Miniforge distribution in your home directory. It includes the fast libmamba solver; the cluster Miniconda module uses Conda's legacy solver and can take an impractical amount of time to resolve the analysis environment.</p></div>
   <div class="environment-layout">
-    <div class="command-card"><div class="command-head"><span>First-time Conda and environment setup</span><button type="button" data-copy-command>Copy command</button></div><pre><code>module load miniconda3/25.3.1-1
-eval "$(${CONDA_EXE} shell.bash hook)"
+    <div class="command-card"><div class="command-head"><span>First-time Miniforge and environment setup</span><button type="button" data-copy-command>Copy command</button></div><pre><code>curl -fsSLo "$HOME/Miniforge3-Linux-ppc64le.sh" https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-ppc64le.sh
+bash "$HOME/Miniforge3-Linux-ppc64le.sh" -b -p "$HOME/miniforge3"
+source "$HOME/miniforge3/etc/profile.d/conda.sh"
+conda config --set solver libmamba
 
 conda env create -f environment_triton_setup.yml
 conda env create -f environment_triton_analysis.yml
@@ -45,7 +47,7 @@ python --version
 
 conda activate mdanalysis
 python --version</code></pre></div>
-    <div class="callout"><strong>Every new login shell</strong><p>Run only the first two lines again: <code>module load miniconda3/25.3.1-1</code> and <code>eval "$(${CONDA_EXE} shell.bash hook)"</code>. The two <code>conda env create</code> commands are a one-time account setup. The Triton-specific files intentionally avoid the workstation <code>linux-64</code> and CUDA pins.</p></div>
+    <div class="callout"><strong>Every new login shell</strong><p>Run <code>source "$HOME/miniforge3/etc/profile.d/conda.sh"</code>, then activate the environment you need. The installation and two <code>conda env create</code> commands are a one-time account setup. The Triton-specific files intentionally avoid the workstation <code>linux-64</code> and CUDA pins.</p></div>
   </div>
 </section>
 
@@ -90,7 +92,7 @@ tail -f mdrun.log</code></pre></div>
 
 <section class="band">
   <div class="section-heading"><p class="eyebrow">The whole Triton path</p><h2>One folder, seven commands.</h2></div>
-  <div class="command-card command-card-large"><pre><code>module load miniconda3/25.3.1-1 && eval "$(${CONDA_EXE} shell.bash hook)"
+  <div class="command-card command-card-large"><pre><code>source "$HOME/miniforge3/etc/profile.d/conda.sh"
 python pymacs_run.py configure
 python pymacs_run.py validate
 conda activate cgenff && module load gromacs/2025.1-gcc-13.4.0-6vq7xfo
