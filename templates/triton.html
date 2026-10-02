@@ -74,7 +74,7 @@ python pymacs_run.py status</code></pre></div>
 </section>
 
 <section class="band quick-install-panel">
-  <div class="quick-install-copy"><p class="eyebrow">Step 5 — Submit MD, analysis, and reporting</p><h2>Use the GPU for MD; free it for CPU analysis.</h2><p>The Triton profile submits the 1-GPU Step 2 job plus a separate dependent CPU job. The CPU job waits for successful MD, runs memory-safe chunked Step 3A, dispatches 3B or 3C when appropriate, and generates the Step 4 figurebook.</p><div class="cta-row"><a class="button secondary" href="/workflow/simulation.html">Learn what Step 2 does</a></div></div>
+  <div class="quick-install-copy"><p class="eyebrow">Step 5 — Submit MD, analysis, and reporting</p><h2>Use the GPU for MD; free it for CPU analysis.</h2><p>The Triton profile submits the 1-GPU Step 2 job plus a separate dependent CPU job. Both scripts charge the lab’s <code>brd</code> LSF project. The CPU job waits for successful MD, runs memory-safe chunked Step 3A, dispatches 3B or 3C when appropriate, and generates the Step 4 figurebook.</p><div class="cta-row"><a class="button secondary" href="/workflow/simulation.html">Learn what Step 2 does</a></div></div>
   <div class="command-card command-card-large"><div class="command-head"><span>Submit and monitor</span><button type="button" data-copy-command>Copy command</button></div><pre><code>python pymacs_run.py submit --profile triton --with-analysis
 
 # Replace JOBID with the number printed by submission
