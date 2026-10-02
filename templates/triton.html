@@ -16,6 +16,12 @@
   <div class="check-list"><span>Connect with <code>ssh triton</code> from a configured UM account.</span><span>Start in a clean folder containing one <code>.pdb</code>, <code>.cif</code>, or <code>.mmcif</code> structure.</span><span>Protein–protein and protein–peptide systems do not require CGenFF ligand parameterization.</span></div>
 </section>
 
+<section class="band environment-band">
+  <div class="section-heading"><p class="eyebrow">Connect to Triton</p><h2>Log in before starting a run folder.</h2><p>Triton access requires an active IDSC account. The cluster login host is <code>t2.idsc.miami.edu</code>; use your University of Miami CaneID as the username. See the <a href="https://idsc.miami.edu/triton/" target="_blank" rel="noopener noreferrer">official IDSC Triton page</a> for account access, policies, and support.</p></div>
+  <div class="command-card command-card-large"><div class="command-head"><span>SSH login</span><button type="button" data-copy-command>Copy command</button></div><pre><code>ssh YOUR_CANEID@t2.idsc.miami.edu</code></pre></div>
+  <div class="callout"><strong>Off campus?</strong><p>Connect through the University of Miami VPN first if your network configuration requires it. Once logged in, confirm the host with <code>hostname</code> and work from your project/home location rather than a local laptop path.</p></div>
+</section>
+
 <section class="band quick-install-panel">
   <div class="quick-install-copy"><p class="eyebrow">Step 1 — Install PyMACS into this run folder</p><h2>Copy a fresh, self-contained PyMACS instance beside your structure.</h2><p>Make and enter a folder for one system, put the input structure there, then run the installer below. New installs include the guided <code>pymacs_run.py</code> helper and the Triton LSF profile.</p></div>
   <div class="command-card command-card-large"><div class="command-head"><span>PyMACS installer</span><button type="button" data-copy-command>Copy install command</button></div><pre><code>{{ quick_install.command }}</code></pre></div>
