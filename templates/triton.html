@@ -34,6 +34,7 @@
 bash "$HOME/Miniforge3-Linux-ppc64le.sh" -b -p "$HOME/miniforge3"
 source "$HOME/miniforge3/etc/profile.d/conda.sh"
 conda config --set solver libmamba
+conda init bash
 
 conda env create -f environment_triton_setup.yml
 conda env create -f environment_triton_analysis.yml
@@ -49,7 +50,7 @@ python --version
 
 conda activate mdanalysis
 python --version</code></pre></div>
-    <div class="callout"><strong>Every new login shell</strong><p>Run <code>source "$HOME/miniforge3/etc/profile.d/conda.sh"</code>, then activate the environment you need. Before any GROMACS command, run <code>module purge</code>, load the GCC runtime and GROMACS modules shown above, and confirm <code>gmx_mpi --version</code>. Triton may print an older-module dependency warning even when GROMACS loads correctly; the version command is the decisive check.</p></div>
+    <div class="callout"><strong>Every new login shell</strong><p>After the one-time <code>conda init bash</code> command, Conda starts automatically in new shells. Activate the environment you need with <code>conda activate cgenff</code> or <code>conda activate mdanalysis</code>. Before any interactive GROMACS command, run <code>module purge</code>, then load the GCC runtime and GROMACS modules shown above. The PyMACS LSF jobs handle Conda and modules automatically.</p></div>
   </div>
 </section>
 
