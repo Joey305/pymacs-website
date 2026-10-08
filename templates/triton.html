@@ -54,6 +54,20 @@ python --version</code></pre></div>
   </div>
 </section>
 
+<section class="band environment-band">
+  <div class="section-heading"><p class="eyebrow">Protein–ligand runs only — private CGenFF access</p><h2>Request access before selecting the Kyle Funnel workflow.</h2><p>Protein–protein and protein–peptide runs can skip this section. For protein–small-molecule runs, email <a href="mailto:jmschulz@med.miami.edu?subject=PyMACS%20Triton%20CGenFF%20Funnel%20Access">the PyMACS administrator</a> for the private Funnel address, your access token, and the exact one-time terminal command. Do not place the token itself in <code>~/.bashrc</code>, a job folder, or a repository.</p></div>
+  <div class="environment-layout">
+    <div class="command-card"><div class="command-head"><span>One-time environment-variable template</span><button type="button" data-copy-command>Copy template</button></div><pre><code># Replace only PRIVATE_FUNNEL_URL with the value sent by the PyMACS administrator.
+# The token is stored separately in ~/.config/pymacs/cgenff-funnel.token.
+cat &gt;&gt; "$HOME/.bashrc" &lt;&lt;'EOF'
+export PYMACS_CGENFF_FUNNEL_URL="PRIVATE_FUNNEL_URL"
+export PYMACS_CGENFF_TOKEN_FILE="$HOME/.config/pymacs/cgenff-funnel.token"
+EOF
+source "$HOME/.bashrc"</code></pre></div>
+    <div class="callout"><strong>What these variables do</strong><p><code>PYMACS_CGENFF_FUNNEL_URL</code> identifies the private Kyle parameterization service; <code>PYMACS_CGENFF_TOKEN_FILE</code> points to a local, permission-restricted token file. Once the administrator’s one-time command has installed the token, these exports persist for future Triton logins. In <code>python pymacs_run.py configure</code>, choose option 5, <em>remote CGenFF via Kyle Funnel</em>.</p></div>
+  </div>
+</section>
+
 <section class="content-grid">
   <div class="section-heading"><p class="eyebrow">Step 3 — Guided configuration</p><h2>Answer questions once; save the scientific choices in this folder.</h2><p>The Q&amp;A finds structures, detects PDB/mmCIF chains, lets you retain intended chains, names them, and presents numbered box options. It writes <code>pymacs_run.json</code>, which later commands read without repeating questions.</p></div>
   <div class="run-list">
