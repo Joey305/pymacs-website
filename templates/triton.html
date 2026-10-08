@@ -68,6 +68,22 @@ source "$HOME/.bashrc"</code></pre></div>
   </div>
 </section>
 
+<section class="band">
+  <div class="section-heading"><p class="eyebrow">Private access folder — copy it to Triton</p><h2>Download, copy, install.</h2><p>After your access request is approved, you will receive a private folder. Keep your University of Miami VPN connected while copying it to Triton. Download that folder to your computer first; if it downloads as a ZIP file, unzip it. The commands below assume it is in your Downloads folder.</p></div>
+  <div class="command-card command-card-large"><div class="command-head"><span>Mac or Linux terminal: copy your private folder to Triton</span><button type="button" data-copy-command>Copy command</button></div><pre><code># Replace YOUR_ACCESS_FOLDER with the folder you received.
+# Replace YOUR_CANEID with your Triton username.
+scp -r "$HOME/Downloads/YOUR_ACCESS_FOLDER" YOUR_CANEID@t2.idsc.miami.edu:~/
+
+# Enter your CaneID password if prompted. Then log in:
+ssh YOUR_CANEID@t2.idsc.miami.edu
+
+# On Triton, enter the copied folder and install access:
+cd ~/YOUR_ACCESS_FOLDER
+bash install_pymacs_kyle_funnel_access.sh
+source "$HOME/.bashrc"</code></pre></div>
+  <div class="callout"><strong>If the copy fails</strong><p>Confirm that the VPN is connected, that you replaced both placeholders, and that the folder is really in <code>~/Downloads</code>. In Finder, you can drag the folder into Terminal after <code>scp -r </code> to insert its exact path, then add a space followed by <code>YOUR_CANEID@t2.idsc.miami.edu:~/</code>.</p></div>
+</section>
+
 <section class="content-grid">
   <div class="section-heading"><p class="eyebrow">Step 3 — Guided configuration</p><h2>Answer questions once; save the scientific choices in this folder.</h2><p>The Q&amp;A finds structures, detects PDB/mmCIF chains, lets you retain intended chains, names them, and presents numbered box options. It writes <code>pymacs_run.json</code>, which later commands read without repeating questions.</p></div>
   <div class="run-list">
