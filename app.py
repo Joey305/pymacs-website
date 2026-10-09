@@ -1,4 +1,4 @@
-from flask import Flask, abort, render_template
+from flask import Flask, abort, redirect, render_template
 
 from docs_content import DOC_PAGE_MAP, DOC_PAGES
 
@@ -80,10 +80,15 @@ def getting_started():
     )
 
 
-@app.route("/triton.html")
 @app.route("/triton")
 def triton():
     return render_template("triton.html", gromacs=GROMACS_INSTALLER, quick_install=QUICK_INSTALL)
+
+
+@app.route("/triton.html")
+def triton_legacy():
+    """Keep old links working while presenting the canonical clean URL."""
+    return redirect("/triton", code=301)
 
 
 @app.route("/engine.html")
