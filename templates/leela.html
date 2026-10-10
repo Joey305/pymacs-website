@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}Leela GPU Server | PyMACS{% endblock %}
+{% block meta_description %}A copyable PyMACS workflow for Leela: activate the validated CUDA-11.5 environment, prepare protein or ligand systems, start protected tmux GPU runs, monitor, and resume safely.{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <p class="eyebrow">PyMACS · Leela GPU server</p>
+  <h1>Run one PyMACS simulation folder on Leela.</h1>
+  <p>Leela runs GROMACS interactively rather than through a scheduler. Give every system its own folder, select one idle GPU, and run the job inside a named <code>tmux</code> session so it continues after you disconnect.</p>
+  <div class="pill-grid" aria-label="Leela workflow characteristics">
+    <span>Interactive GPU server</span><span>CUDA 11.5 GROMACS</span><span>One folder · one structure · one simulation</span><span>Persistent tmux sessions</span>
+  </div>
+</section>
+
+<section class="band split">
+  <div><p class="eyebrow">Before you start</p><h2>Use this page only on Leela.</h2><p>This walkthrough is for authorized Leela users. It is separate from the <a href="/triton">Triton scheduler workflow</a>: on Leela, you start and monitor each job yourself.</p></div>
+  <div class="check-list"><span>Connect through the University of Miami VPN when required.</span><span>Use one clean folder per structure and simulation.</span><span>Never use a GPU already occupied by another MD run.</span></div>
+</section>
+
+<section class="band environment-band">
+  <div class="section-heading"><p class="eyebrow">Step 1 — Connect and activate</p><h2>Prepare the validated Leela environment.</h2><p>The one-time Leela administrator setup provides the <code>pymacs-leela</code> command. It activates the PyMACS setup environment, preserves Leela's compatible CUDA-11.5 GROMACS installation, and loads private Funnel settings when you have been authorized for ligand work.</p></div>
+  <div class="command-card command-card-large"><div class="command-head"><span>Log in and activate PyMACS</span><button type="button" data-copy-command>Copy command</button></div><pre><code># If your SSH config already defines the Leela host:
+ssh leela
+
+# Otherwise, replace YOUR_LEELA_USERNAME:
+# ssh YOUR_LEELA_USERNAME@leela.ccs.miami.edu
+
+pymacs-leela
+gmx --version
+nvidia-smi</code></pre></div>
+  <div class="callout"><strong>Important CUDA note</strong><p>Do not activate the separate <code>gromacs-gpu</code> micromamba environment on Leela. That package expects CUDA 12, while Leela's NVIDIA driver supports CUDA 11.5. <code>pymacs-leela</code> keeps the known-working CUDA-11.5 GROMACS build first in <code>PATH</code>.</p></div>
+</section>
+
+<section class="band environment-band">
+  <div class="section-heading"><p class="eyebrow">Protein–ligand runs only — private CGenFF access</p><h2>Request Funnel access before choosing the ligand workflow.</h2><p>Protein-only, protein–protein, and protein–peptide runs can skip this section. The Kyle CGenFF Funnel URL and token are private; they are stored in permission-restricted files on Leela, never in a job folder or repository.</p><div class="cta-row"><a class="button primary" href="mailto:jmschulz@med.miami.edu?subject=PyMACS%20Leela%20CGenFF%20Funnel%20access%20request&amp;body=Hello%20Joseph%2C%0A%0AI%20would%20like%20access%20to%20the%20PyMACS%20remote%20CGenFF%20%28Kyle%20Funnel%29%20workflow%20on%20Leela.%0A%0AName%3A%0ALeela%20username%3A%0ALab%20%2F%20PI%3A%0AProtein%E2%80%93ligand%20project%20or%20system%3A%0A%0AI%20understand%20that%20the%20access settings are private and will not be shared.%0A%0AThank%20you%2C">Request private CGenFF access</a></div></div>
+  <div class="callout"><strong>After access is installed</strong><p>Run <code>pymacs-leela</code>, then use <code>python pymacs_run.py configure</code> and choose option 5, <em>remote CGenFF via Kyle Funnel</em>. PyMACS sends only the prepared ligand MOL2 to Kyle and receives the CGenFF parameter stream back.</p></div>
+</section>
+
+<section class="band quick-install-panel">
+  <div class="quick-install-copy"><p class="eyebrow">Step 2 — Create one run folder</p><h2>Copy a fresh PyMACS instance beside one structure.</h2><p>Make a new folder for each system. Put a single <code>.pdb</code>, <code>.cif</code>, or <code>.mmcif</code> structure there, then run the installer. Leela has Git available after <code>pymacs-leela</code>.</p></div>
+  <div class="command-card command-card-large"><div class="command-head"><span>Create and install</span><button type="button" data-copy-command>Copy command</button></div><pre><code>pymacs-leela
+mkdir -p /nethome/$USER/MD_PROJECTS/MY_SYSTEM
+cd /nethome/$USER/MD_PROJECTS/MY_SYSTEM
+
+# Copy your structure into this folder first, then run:
+{{ quick_install.command }}</code></pre></div>
+</section>
+
+<section class="content-grid">
+  <div class="section-heading"><p class="eyebrow">Step 3 — Configure and prepare</p><h2>Record choices, then build the solvated system.</h2><p>The guided configuration saves the scientific choices in <code>pymacs_run.json</code>. Setup creates the topology, box, solvent, ions, and <code>em.tpr</code>.</p></div>
+  <div class="run-list">
+    <article class="run-card"><span>1</span><div><h2>Configure</h2><p>For an apo protein, select protein-only. For a ligand system with approved Funnel access, choose option 5.</p><pre><code>pymacs-leela
+python pymacs_run.py configure
+python pymacs_run.py validate</code></pre></div></article>
+    <article class="run-card"><span>2</span><div><h2>Run Step 1</h2><p>Do not start MD until this completes successfully.</p><pre><code>pymacs-leela
+python pymacs_run.py setup
+python pymacs_run.py status</code></pre></div></article>
+  </div>
+</section>
+
+<section class="band environment-band">
+  <div class="section-heading"><p class="eyebrow">Step 4 — Choose an idle GPU</p><h2>One active MD job per GPU.</h2><p>Leela exposes GPUs numbered <code>0</code> through <code>3</code>. Use <code>nvidia-smi</code> immediately before launching a job. Choose a GPU with no active GROMACS process; do not assume a number is free from an earlier check.</p></div>
+  <div class="command-card command-card-large"><div class="command-head"><span>Inspect GPU availability</span><button type="button" data-copy-command>Copy command</button></div><pre><code>pymacs-leela
+nvidia-smi
+
+# Record one idle number, for example:
+GPU_ID=3</code></pre></div>
+  <div class="callout"><strong>Respect active jobs</strong><p>If a GPU lists a GROMACS process or substantial memory use, select another idle GPU or wait. The display process on GPU 0 uses a few MiB and is normal; assess the process table before choosing.</p></div>
+</section>
+
+<section class="band quick-install-panel">
+  <div class="quick-install-copy"><p class="eyebrow">Step 5 — Start MD in tmux</p><h2>Detach without stopping the simulation.</h2><p>A named tmux session keeps the terminal process alive after your SSH connection closes. Start Step 2 inside its own session; use a distinct session name and GPU ID for every system.</p></div>
+  <div class="command-card command-card-large"><div class="command-head"><span>Protein-only 1000 ns run</span><button type="button" data-copy-command>Copy command</button></div><pre><code>pymacs-leela
+cd /nethome/$USER/MD_PROJECTS/MY_SYSTEM
+tmux new -s my-system-md
+
+# Inside tmux, replace GPU_ID with the idle GPU you selected:
+python 2_AutomateGromacs.py --mode protein --ns 1000 --compute GPU --gpu GPU_ID --headless
+
+# Detach and leave the MD running: press Ctrl-b, then d</code></pre></div>
+  <div class="command-card command-card-large"><div class="command-head"><span>Ligand 1000 ns run</span><button type="button" data-copy-command>Copy command</button></div><pre><code>pymacs-leela
+cd /nethome/$USER/MD_PROJECTS/MY_LIGAND_SYSTEM
+tmux new -s my-ligand-md
+
+# Replace LIG and GPU_ID. Run only after Step 1 succeeds.
+python 2_AutomateGromacs.py --mode ligand --ligand LIG --ns 1000 --compute GPU --gpu GPU_ID --headless
+
+# Detach: Ctrl-b, then d</code></pre></div>
+</section>
+
+<section class="band split">
+  <div><p class="eyebrow">Step 6 — Monitor or reconnect</p><h2>Your tmux session survives logout.</h2><p>Reconnect whenever needed. Attaching shows the live program output; the log and GPU view are useful for a quick status check without attaching.</p><pre><code>tmux ls
+tmux attach -t my-system-md
+
+# Or inspect without attaching:
+tail -f run_1000ns.log
+nvidia-smi</code></pre></div>
+  <div><p class="eyebrow">Step 7 — Resume safely</p><h2>Resume only after a genuine interruption.</h2><p>If the tmux session is still listed, the job is still running—do not launch a duplicate. If it stopped and a checkpoint exists, create a new tmux session and continue production.</p><pre><code>pymacs-leela
+cd /nethome/$USER/MD_PROJECTS/MY_SYSTEM
+tmux new -s my-system-resume
+python 2_AutomateGromacs.py --resume --production_only --ns 1000 --compute GPU --gpu GPU_ID --headless</code></pre></div>
+</section>
+
+<section class="band">
+  <div class="section-heading"><p class="eyebrow">The whole Leela path</p><h2>One folder, one GPU, one persistent session.</h2></div>
+  <div class="command-card command-card-large"><div class="command-head"><span>Copyable checklist</span><button type="button" data-copy-command>Copy command</button></div><pre><code>ssh leela
+pymacs-leela
+cd /nethome/$USER/MD_PROJECTS/MY_SYSTEM
+python pymacs_run.py configure
+python pymacs_run.py validate
+python pymacs_run.py setup
+nvidia-smi
+tmux new -s my-system-md
+python 2_AutomateGromacs.py --mode protein --ns 1000 --compute GPU --gpu GPU_ID --headless
+# Detach with Ctrl-b, then d</code></pre></div>
+</section>
+{% endblock %}

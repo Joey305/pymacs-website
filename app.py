@@ -91,6 +91,17 @@ def triton_legacy():
     return redirect("/triton", code=301)
 
 
+@app.route("/leela")
+def leela():
+    return render_template("leela.html", quick_install=QUICK_INSTALL)
+
+
+@app.route("/leela.html")
+def leela_legacy():
+    """Keep old-style links working while presenting the canonical clean URL."""
+    return redirect("/leela", code=301)
+
+
 @app.route("/engine.html")
 @app.route("/engine")
 def engine():
