@@ -2,6 +2,15 @@
 
 Website repository for [pymacs.com](https://www.pymacs.com), the educational companion site for [PyMACS](https://github.com/schurerlab/Pymacs).
 
+## Optional first-party analytics
+
+Analytics is off by default. To enable aggregate-only product telemetry, set
+`PYMACS_ANALYTICS_ENABLED=true`, `PYMACS_ANALYTICS_RANDY_URL`,
+`PYMACS_ANALYTICS_RANDY_TOKEN`, and `PYMACS_PUBLIC_BASE_URL`. The integration
+uses anonymous visitor/session cookies only and sends allow-listed event labels;
+it never sends commands, structures, uploaded data, identifiers, raw logs,
+request bodies, or IP addresses.
+
 PyMACS is a Python-based automation suite for GROMACS molecular dynamics setup, simulation, analysis, visualization, and report generation. This website turns the detailed PyMACS README into a clickable learning hub for users who may be brand new to molecular dynamics, force fields, GROMACS, CHARMM, CGenFF, trajectory analysis, and command-line workflows.
 
 ## Live Website

@@ -1,4 +1,7 @@
-from flask import Flask, abort, redirect, render_template
+import os
+
+from flask import Flask, abort, jsonify, redirect, render_template, request
+from analytics import attach as attach_analytics, browser_event as analytics_browser_event
 
 from docs_content import DOC_PAGE_MAP, DOC_PAGES
 
@@ -22,6 +25,21 @@ from content import (
 app = Flask(__name__)
 
 
+@app.after_request
+def aggregate_analytics(response):
+    try:
+        return attach_analytics(response)
+    except Exception:
+        # Analytics remains optional and cannot interfere with page delivery.
+        return response
+
+
+@app.post("/api/analytics/event")
+def analytics_event():
+    accepted = analytics_browser_event(request.get_json(silent=True))
+    return jsonify({"ok": accepted}), 202 if accepted else 400
+
+
 @app.context_processor
 def inject_site_context():
     return {
@@ -42,6 +60,7 @@ def inject_site_context():
             {"label": "Resources", "href": "/resources.html", "active": ["resources", "glossary"]},
         ],
         "docs_pages": DOC_PAGES,
+        "analytics_enabled": os.environ.get("PYMACS_ANALYTICS_ENABLED", "").lower() in {"1", "true", "yes", "on"},
     }
 
 

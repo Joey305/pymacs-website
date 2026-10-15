@@ -79,6 +79,19 @@
       </div>
     </footer>
     <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    {% if analytics_enabled %}<script>
+      window.pymacsAnalytics = {event: (event_type, feature = '') => fetch('/api/analytics/event', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({event_type, feature})}).catch(() => {})};
+      document.addEventListener('click', (event) => {
+        const link = event.target.closest('a[href]'); if (!link) return;
+        const href = link.href || '';
+        if (href.includes('github.com/schurerlab/Pymacs')) window.pymacsAnalytics.event('github_opened');
+        else if (href.includes('sciencedirect.com')) window.pymacsAnalytics.event('paper_opened');
+        else if (href.includes('gromacs')) window.pymacsAnalytics.event('gromacs_installer_opened');
+        else if (href.includes('citation')) window.pymacsAnalytics.event('citation_opened');
+        else if (href.startsWith('mailto:') && /cgenff/i.test(href)) window.pymacsAnalytics.event('cgenff_access_request_opened', location.pathname.startsWith('/leela') ? 'leela' : 'triton');
+        else if (location.pathname === '/resources.html') window.pymacsAnalytics.event('resource_opened');
+      });
+    </script>{% endif %}
     <script>
       document.querySelectorAll("[data-copy-command]").forEach((button) => {
         button.addEventListener("click", async () => {
@@ -86,6 +99,8 @@
           const code = card ? card.querySelector("code") : null;
           if (!code) return;
           await navigator.clipboard.writeText(code.innerText);
+          const path = location.pathname;
+          window.pymacsAnalytics?.event('command_copied', path.startsWith('/triton') ? 'triton_setup' : path.startsWith('/leela') ? 'leela_setup' : path.startsWith('/getting-started') ? 'quick_install' : 'workflow_example');
           const original = button.textContent;
           button.textContent = "Copied";
           window.setTimeout(() => {
