@@ -25,7 +25,7 @@
   </div>
   <div class="environment-layout">
     <div class="command-card command-card-large">
-      <div class="command-head"><span>macOS Apple Silicon (M-series) Miniconda install</span><button type="button" data-copy-command aria-label="Copy Miniconda install command">Copy command</button></div>
+<div class="command-head"><span>macOS Apple Silicon (M-series) Miniconda install</span><button type="button" data-copy-command data-analytics-copy="environment_setup" aria-label="Copy Miniconda install command">Copy command</button></div>
       <pre><code>curl -fsSLo "$HOME/Miniconda3-latest-MacOSX-arm64.sh" https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh
 bash "$HOME/Miniconda3-latest-MacOSX-arm64.sh" -b -p "$HOME/miniconda3"
 eval "$("$HOME/miniconda3/bin/conda" shell.bash hook)"
@@ -55,7 +55,7 @@ conda --version</code></pre>
     <div class="command-card command-card-large">
       <div class="command-head">
         <span>Quick install command</span>
-        <button type="button" data-copy-command aria-label="Copy GROMACS install command">Copy install command</button>
+        <button type="button" data-copy-command data-analytics-copy="gromacs_install" aria-label="Copy GROMACS install command">Copy install command</button>
       </div>
       <pre><code>{{ gromacs.quick_command }}</code></pre>
     </div>
@@ -121,7 +121,7 @@ conda --version</code></pre>
   <div class="command-card command-card-large">
     <div class="command-head">
       <span>PyMACS installer</span>
-      <button type="button" data-copy-command aria-label="Copy PyMACS install command">Copy install command</button>
+      <button type="button" data-copy-command data-analytics-copy="quick_install" aria-label="Copy PyMACS install command">Copy install command</button>
     </div>
     <pre><code>{{ quick_install.command }}</code></pre>
   </div>

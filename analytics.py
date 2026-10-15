@@ -1,7 +1,7 @@
 """Anonymous, best-effort PyMACS website analytics with no content capture."""
 from __future__ import annotations
 
-import json, os, secrets, threading
+import json, os, re, secrets, threading
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 
@@ -10,7 +10,7 @@ from flask import Response, g, request
 EVENTS = {
     "page_view": {""}, "docs_opened": {""}, "workflow_opened": {""}, "examples_opened": {""},
     "getting_started_opened": {""}, "triton_guide_opened": {""}, "leela_guide_opened": {""},
-    "command_copied": {"quick_install", "triton_setup", "leela_setup", "workflow_example"},
+    "command_copied": {"quick_install", "full_bash_setup", "already_configured", "gromacs_install", "environment_setup", "triton_setup", "leela_setup", "workflow_example", "example_1", "example_2", "example_3", "example_4"},
     "github_opened": {""}, "paper_opened": {""}, "gromacs_installer_opened": {""},
     "citation_opened": {""}, "resource_opened": {""}, "cgenff_access_request_opened": {"triton", "leela"},
 }
@@ -43,7 +43,11 @@ def _send(payload):
     except Exception: pass
 
 
-def track(event_type, feature="", status="", path=None):
+def _campaign():
+    value = request.args.get("utm_campaign", "").strip().lower()
+    return value if re.fullmatch(r"youtube-[a-z0-9-]{1,60}", value) else ""
+
+def track(event_type, feature="", status="", path=None, campaign=None):
     visitor, session = _id("pymacs_visitor"), _id("pymacs_session")
     if event_type not in EVENTS or feature not in EVENTS[event_type]: return visitor, session
     safe_path = path or request.path
@@ -54,7 +58,7 @@ def track(event_type, feature="", status="", path=None):
     referrer_host = urlparse(request.referrer or "").hostname or ""
     public_host = urlparse(os.environ.get("PYMACS_PUBLIC_BASE_URL", "")).hostname or ""
     referrer = "internal" if referrer_host and public_host and referrer_host == public_host else (referrer_host[:255] or "direct")
-    payload = {"event_id": secrets.token_urlsafe(18), "event_type": event_type, "visitor_id": visitor, "session_id": session, "path": safe_path, "referrer": referrer, "device": device, "browser": browser, "feature": feature, "status": status}
+    payload = {"event_id": secrets.token_urlsafe(18), "event_type": event_type, "visitor_id": visitor, "session_id": session, "path": safe_path, "referrer": referrer, "device": device, "browser": browser, "feature": feature, "status": status, "campaign": campaign if campaign is not None else _campaign()}
     threading.Thread(target=_send, args=(payload,), daemon=True).start()
     return visitor, session
 
@@ -75,5 +79,6 @@ def browser_event(payload):
     if not isinstance(payload, dict): return False
     event_type, feature = payload.get("event_type"), payload.get("feature", "")
     if event_type not in EVENTS or feature not in EVENTS[event_type]: return False
-    track(event_type, feature)
+    campaign = str(payload.get("campaign") or "")
+    track(event_type, feature, campaign=campaign if re.fullmatch(r"youtube-[a-z0-9-]{1,60}", campaign) else "")
     return True

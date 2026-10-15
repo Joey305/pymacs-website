@@ -80,7 +80,7 @@
     </footer>
     <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
     {% if analytics_enabled %}<script>
-      window.pymacsAnalytics = {event: (event_type, feature = '') => fetch('/api/analytics/event', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({event_type, feature})}).catch(() => {})};
+      window.pymacsAnalytics = {event: (event_type, feature = '') => { const campaign = new URLSearchParams(location.search).get('utm_campaign') || ''; return fetch('/api/analytics/event', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({event_type, feature, campaign})}).catch(() => {}); }};
       document.addEventListener('click', (event) => {
         const link = event.target.closest('a[href]'); if (!link) return;
         const href = link.href || '';
@@ -99,8 +99,8 @@
           const code = card ? card.querySelector("code") : null;
           if (!code) return;
           await navigator.clipboard.writeText(code.innerText);
-          const path = location.pathname;
-          window.pymacsAnalytics?.event('command_copied', path.startsWith('/triton') ? 'triton_setup' : path.startsWith('/leela') ? 'leela_setup' : path.startsWith('/getting-started') ? 'quick_install' : 'workflow_example');
+          const label = button.dataset.analyticsCopy || (location.pathname.startsWith('/triton') ? 'triton_setup' : location.pathname.startsWith('/leela') ? 'leela_setup' : location.pathname.startsWith('/getting-started') ? 'quick_install' : 'workflow_example');
+          window.pymacsAnalytics?.event('command_copied', label);
           const original = button.textContent;
           button.textContent = "Copied";
           window.setTimeout(() => {

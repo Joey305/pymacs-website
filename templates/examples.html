@@ -39,7 +39,7 @@ ls 1_AutomateGromacs.py 2_AutomateGromacs.py 3A_AutomateGromacs.py Example_Choic
     <div class="command-card command-card-large">
       <div class="command-head">
         <span>One-command installer</span>
-        <button type="button" data-copy-command aria-label="Copy PyMACS install command">Copy install command</button>
+        <button type="button" data-copy-command data-analytics-copy="quick_install" aria-label="Copy PyMACS install command">Copy install command</button>
       </div>
       <pre><code>{{ quick_install.command }}</code></pre>
     </div>
@@ -56,6 +56,7 @@ ls 1_AutomateGromacs.py 2_AutomateGromacs.py 3A_AutomateGromacs.py Example_Choic
   </nav>
 
   {% for example in examples %}
+    {% set example_number = loop.index %}
     <article class="example-walkthrough" id="{{ example.slug }}">
       <header class="example-walkthrough-head">
         <div>
@@ -97,7 +98,7 @@ ls 1_AutomateGromacs.py 2_AutomateGromacs.py 3A_AutomateGromacs.py Example_Choic
               <div class="command-card">
                 <div class="command-head">
                   <span>Terminal commands</span>
-                  <button type="button" data-copy-command aria-label="Copy example terminal commands">Copy</button>
+                  <button type="button" data-copy-command data-analytics-copy="example_{{ example_number }}" aria-label="Copy example terminal commands">Copy</button>
                 </div>
                 <pre><code>{{ step.command }}</code></pre>
               </div>
