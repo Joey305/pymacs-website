@@ -47,6 +47,26 @@ def _campaign():
     value = request.args.get("utm_campaign", "").strip().lower()
     return value if re.fullmatch(r"youtube-[a-z0-9-]{1,60}", value) else ""
 
+
+def _platform(agent):
+    """Return a broad OS category, never the user-agent string itself."""
+    if "android" in agent: return "android"
+    if any(item in agent for item in ("iphone", "ipad", "ios")): return "ios"
+    if "windows" in agent: return "windows"
+    if "mac os" in agent or "macintosh" in agent: return "macos"
+    if "linux" in agent or "x11" in agent: return "linux"
+    return "other"
+
+
+def _referrer_category(host, public_host):
+    if not host: return "direct"
+    if public_host and host == public_host: return "internal"
+    if "youtube" in host: return "youtube"
+    if "github" in host: return "github"
+    if any(item in host for item in ("google.", "bing.", "duckduckgo.", "yahoo.")): return "search"
+    if any(item in host for item in ("x.com", "twitter.", "linkedin.", "facebook.", "reddit.")): return "social"
+    return "other_referral"
+
 def track(event_type, feature="", status="", path=None, campaign=None):
     visitor, session = _id("pymacs_visitor"), _id("pymacs_session")
     if event_type not in EVENTS or feature not in EVENTS[event_type]: return visitor, session
@@ -57,8 +77,8 @@ def track(event_type, feature="", status="", path=None, campaign=None):
     browser = "firefox" if "firefox" in agent else "safari" if "safari" in agent and "chrome" not in agent else "chrome" if "chrome" in agent else "other"
     referrer_host = urlparse(request.referrer or "").hostname or ""
     public_host = urlparse(os.environ.get("PYMACS_PUBLIC_BASE_URL", "")).hostname or ""
-    referrer = "internal" if referrer_host and public_host and referrer_host == public_host else (referrer_host[:255] or "direct")
-    payload = {"event_id": secrets.token_urlsafe(18), "event_type": event_type, "visitor_id": visitor, "session_id": session, "path": safe_path, "referrer": referrer, "device": device, "browser": browser, "feature": feature, "status": status, "campaign": campaign if campaign is not None else _campaign()}
+    referrer = _referrer_category(referrer_host, public_host)
+    payload = {"event_id": secrets.token_urlsafe(18), "event_type": event_type, "visitor_id": visitor, "session_id": session, "path": safe_path, "referrer": referrer, "device": device, "browser": browser, "platform": _platform(agent), "feature": feature, "status": status, "campaign": campaign if campaign is not None else _campaign()}
     threading.Thread(target=_send, args=(payload,), daemon=True).start()
     return visitor, session
 

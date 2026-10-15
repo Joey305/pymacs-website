@@ -18,7 +18,7 @@
 
 <section class="band environment-band">
   <div class="section-heading"><p class="eyebrow">Step 1 — Connect and activate</p><h2>Prepare the validated Leela environment.</h2><p>The one-time Leela administrator setup provides the <code>pymacs-leela</code> command. It activates the PyMACS setup environment, preserves Leela's compatible CUDA-11.5 GROMACS installation, and loads private Funnel settings when you have been authorized for ligand work.</p></div>
-  <div class="command-card command-card-large"><div class="command-head"><span>Log in and activate PyMACS</span><button type="button" data-copy-command>Copy command</button></div><pre><code># If your SSH config already defines the Leela host:
+  <div class="command-card command-card-large"><div class="command-head"><span>Log in and activate PyMACS</span><button type="button" data-copy-command data-analytics-copy="leela_setup">Copy command</button></div><pre><code># If your SSH config already defines the Leela host:
 ssh leela
 
 # Otherwise, replace YOUR_LEELA_USERNAME:
@@ -37,7 +37,7 @@ nvidia-smi</code></pre></div>
 
 <section class="band quick-install-panel">
   <div class="quick-install-copy"><p class="eyebrow">Step 2 — Create one run folder</p><h2>Copy a fresh PyMACS instance beside one structure.</h2><p>Make a new folder for each system. Put a single <code>.pdb</code>, <code>.cif</code>, or <code>.mmcif</code> structure there, then run the installer. Leela has Git available after <code>pymacs-leela</code>.</p></div>
-  <div class="command-card command-card-large"><div class="command-head"><span>Create and install</span><button type="button" data-copy-command>Copy command</button></div><pre><code>pymacs-leela
+  <div class="command-card command-card-large"><div class="command-head"><span>Create and install</span><button type="button" data-copy-command data-analytics-copy="quick_install">Copy command</button></div><pre><code>pymacs-leela
 mkdir -p /nethome/$USER/MD_PROJECTS/MY_SYSTEM
 cd /nethome/$USER/MD_PROJECTS/MY_SYSTEM
 
@@ -69,7 +69,7 @@ GPU_ID=3</code></pre></div>
 
 <section class="band quick-install-panel">
   <div class="quick-install-copy"><p class="eyebrow">Step 5 — Start MD in tmux</p><h2>Detach without stopping the simulation.</h2><p>A named tmux session keeps the terminal process alive after your SSH connection closes. Start Step 2 inside its own session; use a distinct session name and GPU ID for every system.</p></div>
-  <div class="command-card command-card-large"><div class="command-head"><span>Protein-only 1000 ns run</span><button type="button" data-copy-command>Copy command</button></div><pre><code>pymacs-leela
+  <div class="command-card command-card-large"><div class="command-head"><span>Protein-only 1000 ns run</span><button type="button" data-copy-command data-analytics-copy="already_configured">Copy command</button></div><pre><code>pymacs-leela
 cd /nethome/$USER/MD_PROJECTS/MY_SYSTEM
 tmux new -s my-system-md
 
