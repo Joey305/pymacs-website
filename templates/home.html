@@ -13,7 +13,10 @@
     </div>
   </div>
   <div class="hero-visual" aria-label="PyMACS workflow summary">
-    <img src="{{ url_for('static', filename='img/pymacs-logo.png') }}" alt="PyMACS logo">
+    <span class="hero-badge">
+      <img class="badge-light" src="{{ url_for('static', filename='img/pymacs-badge-light.png') }}" alt="PyMACS molecular dynamics badge">
+      <img class="badge-dark" src="{{ url_for('static', filename='img/pymacs-badge-dark.png') }}" alt="">
+    </span>
     <div class="orbit-card one">Structure</div>
     <div class="orbit-card two">CHARMM36</div>
     <div class="orbit-card three">GROMACS</div>
